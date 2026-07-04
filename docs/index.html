@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八字风水分析工具 · Bazi Fengshui Skill</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --bg-hover: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --text-dim: #6e7681;
+  --accent: #58a6ff;
+  --wood: #3fb950;
+  --fire: #f85149;
+  --earth: #d29922;
+  --metal: #d1d5da;
+  --water: #58a6ff;
+  --radius: 12px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 15px;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 80px 24px 60px;
+  border-bottom: 1px solid var(--border);
+}
+.hero h1 {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+.hero h1 .badge {
+  font-size: 14px;
+  vertical-align: middle;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-left: 8px;
+  color: var(--accent);
+}
+.hero p {
+  font-size: 17px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+.hero-tags {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero-tags span {
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+}
+
+/* Section */
+.section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+.section:last-child { border-bottom: none; }
+.section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.section-desc {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+/* Calculator */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 768px) { .calc-grid { grid-template-columns: 1fr; } }
+
+.calc-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+.calc-form h3 { font-size: 16px; margin-bottom: 20px; font-weight: 500; }
+.form-row { margin-bottom: 16px; }
+.form-row label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.form-row select, .form-row input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.form-row select:focus, .form-row input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-row-inline { display: flex; gap: 12px; }
+.form-row-inline > div { flex: 1; }
+.btn-calc {
+  width: 100%;
+  padding: 12px;
+  background: #238636;
+  border: 1px solid #2ea043;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.btn-calc:hover { background: #2ea043; }
+.disclaimer {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Results */
+.calc-results {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  min-height: 300px;
+}
+.results-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 250px;
+  color: var(--text-dim);
+  font-size: 14px;
+  text-align: center;
+}
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.pillar {
+  text-align: center;
+  padding: 16px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+.pillar-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.pillar-stem, .pillar-branch {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.pillar-element { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+.el-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+.el-badge.wood { color: var(--wood); background: rgba(63,185,80,0.12); }
+.el-badge.fire { color: var(--fire); background: rgba(248,81,73,0.12); }
+.el-badge.earth { color: var(--earth); background: rgba(210,153,34,0.12); }
+.el-badge.metal { color: var(--metal); background: rgba(209,213,218,0.12); }
+.el-badge.water { color: var(--water); background: rgba(88,166,255,0.12); }
+
+.result-section { margin-bottom: 20px; }
+.result-section h4 { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
+.favor-box, .avoid-box {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.favor-box .el-badge, .avoid-box .el-badge { font-size: 14px; padding: 4px 12px; }
+.result-summary {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* Five Elements Balance */
+.elements-bar {
+  display: flex;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.elements-bar > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  transition: width 0.6s ease;
+  min-width: 0;
+}
+.el-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.el-legend span::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.el-legend .l-wood::before { background: var(--wood); }
+.el-legend .l-fire::before { background: var(--fire); }
+.el-legend .l-earth::before { background: var(--earth); }
+.el-legend .l-metal::before { background: var(--metal); }
+.el-legend .l-water::before { background: var(--water); }
+
+/* Compass */
+.compass-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.compass-info {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) { .compass-info { grid-template-columns: 1fr; } }
+.compass-info > div {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.compass-info h4 { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.compass-info ul { list-style: none; font-size: 13px; }
+.compass-info li { padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+.compass-info li::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Pipeline */
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.pipeline-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+}
+.pipeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 36px;
+  bottom: -12px;
+  width: 2px;
+  background: var(--border);
+}
+.pipeline-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  z-index: 1;
+}
+.pipeline-body { padding-bottom: 24px; flex: 1; }
+.pipeline-body h4 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.pipeline-body p { font-size: 13px; color: var(--text-muted); }
+
+/* Skill Structure */
+.skill-tree {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 2;
+  overflow-x: auto;
+}
+.skill-tree .dir { color: var(--accent); }
+.skill-tree .file { color: var(--text); }
+.skill-tree .desc { color: var(--text-dim); }
+.skill-tree .hl { color: var(--wood); }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--text-dim);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.4s ease; }
+
+/* Direction result */
+.dir-result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+.dir-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+}
+.dir-result-item .dir-name { font-weight: 500; }
+.dir-result-item .dir-rating { font-size: 12px; padding: 2px 8px; border-radius: 4px; }
+.dir-rating.great { color: var(--wood); background: rgba(63,185,80,0.12); }
+.dir-rating.good { color: var(--accent); background: rgba(88,166,255,0.12); }
+.dir-rating.neutral { color: var(--text-muted); background: rgba(139,148,158,0.12); }
+.dir-rating.bad { color: var(--earth); background: rgba(210,153,34,0.12); }
+.dir-rating.terrible { color: var(--fire); background: rgba(248,81,73,0.12); }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>八字风水分析工具 <span class="badge">Skill</span></h1>
+  <p>输入出生年月日，自动推算八字喜忌五行，生成个性化方位吉凶判断、板块推荐、风水优化与搬迁规划。</p>
+  <div class="hero-tags">
+    <span>四柱推算</span>
+    <span>方位吉凶</span>
+    <span>板块推荐</span>
+    <span>风水优化</span>
+    <span>搬迁规划</span>
+  </div>
+</div>
+
+<!-- Bazi Calculator -->
+<div class="section">
+  <div class="container">
+    <h2>八字排盘计算器</h2>
+    <p class="section-desc">输入出生信息，自动推算四柱八字、五行分布与喜用忌神</p>
+    <div class="calc-grid">
+      <div class="calc-form">
+        <h3>出生信息</h3>
+        <div class="form-row">
+          <label>公历年份</label>
+          <select id="year"></select>
+        </div>
+        <div class="form-row form-row-inline">
+          <div>
+            <label>月份</label>
+            <select id="month"></select>
+          </div>
+          <div>
+            <label>日期</label>
+            <select id="day"></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>时辰（不清楚可选"未知"）</label>
+          <select id="hour"></select>
+        </div>
+        <div class="form-row">
+          <label>性别</label>
+          <select id="gender">
+            <option value="male">男</option>
+            <option value="female">女</option>
+          </select>
+        </div>
+        <button class="btn-calc" onclick="calculateBazi()">开始排盘</button>
+        <p class="disclaimer">
+          本工具基于干支历法推算，供学习参考使用。<br>
+          精确排盘建议使用专业软件（如 lunar-python）。<br>
+          月柱以节气为界，此处使用近似日期划分。
+        </p>
+      </div>
+      <div class="calc-results" id="results">
+        <div class="results-placeholder">
+          填写出生信息后点击「开始排盘」<br>查看八字分析结果
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Direction Compass -->
+<div class="section">
+  <div class="container">
+    <h2>方位吉凶指南针</h2>
+    <p class="section-desc">基于八字喜忌五行，判断八个方位的吉凶等级</p>
+    <div class="compass-wrap" id="compassWrap">
+      <svg id="compass" width="400" height="400" viewBox="0 0 400 400"></svg>
+    </div>
+    <div class="compass-info" id="compassInfo" style="display:none;">
+      <div>
+        <h4>大吉方位（用神方）</h4>
+        <ul id="greatDirs"></ul>
+      </div>
+      <div>
+        <h4>大凶方位（忌神方）</h4>
+        <ul id="badDirs"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Analysis Pipeline -->
+<div class="section">
+  <div class="container">
+    <h2>分析流程</h2>
+    <p class="section-desc">从输入到输出的七步分析管线</p>
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="pipeline-num">1</div>
+        <div class="pipeline-body">
+          <h4>收集信息</h4>
+          <p>出生年月日时辰、性别、所在城市、当前住址、公司地址、特殊情况（负债/远程管理等）</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">2</div>
+        <div class="pipeline-body">
+          <h4>推算八字喜忌</h4>
+          <p>排四柱 → 定日主旺衰 → 确定喜用神（补益日主的五行）与忌神（消耗日主的五行）</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">3</div>
+        <div class="pipeline-body">
+          <h4>方位吉凶判断</h4>
+          <p>城市中心为原点划分八方位 → 结合自然地理修正五行 → 对照喜忌评级（大吉/吉/平/凶/大凶）</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">4</div>
+        <div class="pipeline-body">
+          <h4>板块推荐</h4>
+          <p>按五行契合度分梯队 → 标注小区举例、五行优势、价格区间、适配理由 → 考虑经济状况调整</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">5</div>
+        <div class="pipeline-body">
+          <h4>住址/办公地优化</h4>
+          <p>分析楼层五行与周边环境 → 提供颜色/方向/摆件/绿植化解方案 → 优先零成本/低成本</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">6</div>
+        <div class="pipeline-body">
+          <h4>搬迁优先级排序</h4>
+          <p>P0立即改造 → P1本周优化 → P2考察准备 → P3长期落定 → P4远期迁移 → 结合流年吉凶调整时间</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">7</div>
+        <div class="pipeline-body">
+          <h4>输出完整报告</h4>
+          <p>方位吉凶表 + 分梯队推荐表 + 优化方案表 + 优先级行动表 + 一句话总结</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Skill Structure -->
+<div class="section">
+  <div class="container">
+    <h2>Skill 文件结构</h2>
+    <p class="section-desc">渐进式加载设计：SKILL.md 精简，详细数据按需从 references 加载</p>
+    <div class="skill-tree">
+<span class="dir">bazi-fengshui-general/</span>
+├── <span class="hl">SKILL.md</span>                          <span class="desc"># 主技能文件（~1.5k words）</span>
+│                                    <span class="desc">  概述、执行流程七步、输出规范</span>
+└── <span class="dir">references/</span>
+    ├── <span class="file">bazi-calculation.md</span>         <span class="desc"># 四柱排法、旺衰判断、喜忌确定</span>
+    ├── <span class="file">direction-analysis.md</span>       <span class="desc"># 方位五行、吉凶评级、板块推荐方法</span>
+    ├── <span class="file">optimization-guide.md</span>       <span class="desc"># 楼层化解、环境分析、布局对照表</span>
+    ├── <span class="file">relocation-plan.md</span>          <span class="desc"># P0-P4 体系、流年配合、行动模板</span>
+    └── <span class="file">output-templates.md</span>         <span class="desc"># 标准输出格式与模板</span>
+    </div>
+  </div>
+</div>
+
+<!-- Five Elements Reference -->
+<div class="section">
+  <div class="container">
+    <h2>五行对照速查</h2>
+    <p class="section-desc">天干地支、方位、颜色、数字的五行归属</p>
+    <div class="calc-grid">
+      <div class="calc-form">
+        <h3>天干地支五行</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge wood" style="min-width:40px;text-align:center;">木</span><span style="font-size:13px;color:var(--text-muted);">甲乙 · 寅卯辰 · 东方 · 春</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge fire" style="min-width:40px;text-align:center;">火</span><span style="font-size:13px;color:var(--text-muted);">丙丁 · 巳午未 · 南方 · 夏</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge earth" style="min-width:40px;text-align:center;">土</span><span style="font-size:13px;color:var(--text-muted);">戊己 · 辰戌丑未 · 中央 · 四季</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge metal" style="min-width:40px;text-align:center;">金</span><span style="font-size:13px;color:var(--text-muted);">庚辛 · 申酉戌 · 西方 · 秋</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge water" style="min-width:40px;text-align:center;">水</span><span style="font-size:13px;color:var(--text-muted);">壬癸 · 亥子丑 · 北方 · 冬</span></div>
+        </div>
+      </div>
+      <div class="calc-form">
+        <h3>颜色与楼层五行</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge wood" style="min-width:40px;text-align:center;">木</span><span style="font-size:13px;color:var(--text-muted);">绿/青 · 楼层尾数 3/8</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge fire" style="min-width:40px;text-align:center;">火</span><span style="font-size:13px;color:var(--text-muted);">红/紫 · 楼层尾数 2/7</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge earth" style="min-width:40px;text-align:center;">土</span><span style="font-size:13px;color:var(--text-muted);">黄/棕 · 楼层尾数 5/0</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge metal" style="min-width:40px;text-align:center;">金</span><span style="font-size:13px;color:var(--text-muted);">白/银 · 楼层尾数 4/9</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge water" style="min-width:40px;text-align:center;">水</span><span style="font-size:13px;color:var(--text-muted);">黑/蓝 · 楼层尾数 1/6</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>八字风水分析 Skill · 基于 WorkBuddy Skill 框架开发</p>
+  <p style="margin-top:8px;">GitHub: <a href="#" id="ghLink">bazi-fengshui-skill</a> · 供学习参考，非专业风水建议</p>
+</div>
+
+<script>
+// ===== Data =====
+const stems = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const branches = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const stemElements = ['wood','fire','earth','metal','water']; // pairs: 甲乙=wood...
+const branchElements = ['water','water','wood','wood','earth','fire','fire','earth','metal','metal','earth','water'];
+// branchElements index: 子=water, 丑=earth, 寅=wood, 卯=wood, 辰=earth, 巳=fire, 午=fire, 未=earth, 申=metal, 酉=metal, 戌=earth, 亥=water
+// Wait, let me fix: 子(0)=water, 丑(1)=earth, 寅(2)=wood, 卯(3)=wood, 辰(4)=earth, 巳(5)=fire, 午(6)=fire, 未(7)=earth, 申(8)=metal, 酉(9)=metal, 戌(10)=earth, 亥(11)=water
+const branchElMap = ['water','earth','wood','wood','earth','fire','fire','earth','metal','metal','earth','water'];
+
+const elNames = { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' };
+const elColors = { wood: '#3fb950', fire: '#f85149', earth: '#d29922', metal: '#d1d5da', water: '#58a6ff' };
+const elGen = { wood: 'fire', fire: 'earth', earth: 'metal', metal: 'water', water: 'wood' }; // 生
+const elRes = { wood: 'earth', fire: 'metal', earth: 'water', metal: 'wood', water: 'fire' }; // 克
+
+// Direction data: [name, label, element, angle]
+const directions = [
+  { name: '正北', el: 'water', angle: 0 },
+  { name: '东北', el: 'earth', angle: 45 },
+  { name: '正东', el: 'wood', angle: 90 },
+  { name: '东南', el: 'wood', angle: 135 },
+  { name: '正南', el: 'fire', angle: 180 },
+  { name: '西南', el: 'earth', angle: 225 },
+  { name: '正西', el: 'metal', angle: 270 },
+  { name: '西北', el: 'metal', angle: 315 }
+];
+
+// Solar term approximate boundaries for month branches
+// Index 0=寅月(Jan6-Feb3 is 丑月, so monthIndex 0 = 寅月 starts ~Feb4)
+const monthBoundaries = [
+  { branch: 2, start: [2,4] },   // 寅月 Feb 4
+  { branch: 3, start: [3,6] },   // 卯月 Mar 6
+  { branch: 4, start: [4,5] },   // 辰月 Apr 5
+  { branch: 5, start: [5,6] },   // 巳月 May 6
+  { branch: 6, start: [6,6] },   // 午月 Jun 6
+  { branch: 7, start: [7,7] },   // 未月 Jul 7
+  { branch: 8, start: [8,8] },   // 申月 Aug 8
+  { branch: 9, start: [9,8] },   // 酉月 Sep 8
+  { branch: 10, start: [10,8] }, // 戌月 Oct 8
+  { branch: 11, start: [11,7] }, // 亥月 Nov 7
+  { branch: 0, start: [12,8] },  // 子月 Dec 8
+  { branch: 1, start: [1,6] }    // 丑月 Jan 6
+];
+
+// Hour branches
+const hourBranches = [
+  { branch: 0, start: 23, end: 1, name: '子时 23:00-01:00' },
+  { branch: 1, start: 1, end: 3, name: '丑时 01:00-03:00' },
+  { branch: 2, start: 3, end: 5, name: '寅时 03:00-05:00' },
+  { branch: 3, start: 5, end: 7, name: '卯时 05:00-07:00' },
+  { branch: 4, start: 7, end: 9, name: '辰时 07:00-09:00' },
+  { branch: 5, start: 9, end: 11, name: '巳时 09:00-11:00' },
+  { branch: 6, start: 11, end: 13, name: '午时 11:00-13:00' },
+  { branch: 7, start: 13, end: 15, name: '未时 13:00-15:00' },
+  { branch: 8, start: 15, end: 17, name: '申时 15:00-17:00' },
+  { branch: 9, start: 17, end: 19, name: '酉时 17:00-19:00' },
+  { branch: 10, start: 19, end: 21, name: '戌时 19:00-21:00' },
+  { branch: 11, start: 21, end: 23, name: '亥时 21:00-23:00' }
+];
+
+// ===== Init form =====
+function initForm() {
+  const yearSel = document.getElementById('year');
+  for (let y = 1940; y <= 2026; y++) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y + '年';
+    if (y === 1995) opt.selected = true;
+    yearSel.appendChild(opt);
+  }
+  const monthSel = document.getElementById('month');
+  for (let m = 1; m <= 12; m++) {
+    monthSel.appendChild(new Option(m + '月', m));
+  }
+  const daySel = document.getElementById('day');
+  for (let d = 1; d <= 31; d++) {
+    daySel.appendChild(new Option(d + '日', d));
+  }
+  const hourSel = document.getElementById('hour');
+  hourSel.appendChild(new Option('未知', -1));
+  hourBranches.forEach((h, i) => {
+    hourSel.appendChild(new Option(h.name, i));
+  });
+}
+initForm();
+
+// ===== Bazi Calculation =====
+function getStemEl(stemIdx) {
+  return stemElements[Math.floor(stemIdx / 2)];
+}
+function getBranchEl(branchIdx) {
+  return branchElMap[branchIdx];
+}
+
+function getYearPillar(year) {
+  const idx = ((year - 4) % 60 + 60) % 60;
+  return { stem: idx % 10, branch: idx % 12, idx: idx };
+}
+
+function getMonthBranch(month, day) {
+  for (let i = monthBoundaries.length - 1; i >= 0; i--) {
+    const mb = monthBoundaries[i];
+    const [m, d] = mb.start;
+    if (month > m || (month === m && day >= d)) {
+      return mb.branch;
+    }
+  }
+  // Before Jan 6 → still 丑月 of previous year, but for simplicity return 丑
+  return 1;
+}
+
+function getMonthStem(yearStem, monthBranchIdx) {
+  // 五虎遁: determine first month (寅月) stem based on year stem
+  const yearStemEl = getStemEl(yearStem);
+  let firstMonthStem;
+  if (yearStem % 5 === 0 || yearStem % 5 === 5 % 5) {
+    // 甲己年 → 丙寅起
+    firstMonthStem = 2; // 丙
+  }
+  // Better: use formula
+  const lookup = [2, 4, 6, 8, 0]; // 甲己→丙(2), 乙庚→戊(4), 丙辛→庚(6), 丁壬→壬(8), 戊癸→甲(0)
+  firstMonthStem = lookup[yearStem % 5];
+  // monthBranchIdx: 寅=2, 卯=3, ... 丑=1
+  // offset from 寅
+  const offset = (monthBranchIdx - 2 + 12) % 12;
+  return (firstMonthStem + offset) % 10;
+}
+
+function getDayPillar(year, month, day) {
+  // Reference: 1900-01-01 = 甲戌日 (index 10 in 60-cycle, 0=甲子)
+  const refDate = Date.UTC(1900, 0, 1);
+  const targetDate = Date.UTC(year, month - 1, day);
+  const daysDiff = Math.floor((targetDate - refDate) / 86400000);
+  const dayIdx = ((daysDiff + 10) % 60 + 60) % 60;
+  return { stem: dayIdx % 10, branch: dayIdx % 12, idx: dayIdx };
+}
+
+function getHourPillar(dayStem, hourBranchIdx) {
+  if (hourBranchIdx < 0) return null;
+  // 五鼠遁: determine 子时 stem based on day stem
+  const lookup = [0, 2, 4, 6, 8]; // 甲己→甲(0), 乙庚→丙(2), 丙辛→戊(4), 丁壬→庚(6), 戊癸→壬(8)
+  const firstHourStem = lookup[dayStem % 5];
+  return { stem: (firstHourStem + hourBranchIdx) % 10, branch: hourBranchIdx };
+}
+
+function countElements(pillars) {
+  const counts = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
+  pillars.forEach(p => {
+    if (!p) return;
+    counts[getStemEl(p.stem)]++;
+    counts[getBranchEl(p.branch)]++;
+  });
+  return counts;
+}
+
+function analyzeDayMaster(dayStem, counts, monthBranchIdx) {
+  const dayEl = getStemEl(dayStem);
+  // Check if day master is supported by month (得令)
+  const monthEl = getBranchEl(monthBranchIdx);
+  const supportedByMonth = (dayEl === monthEl) || (elGen[monthEl] === dayEl);
+
+  // Count supporting elements (same + generating)
+  const genEl = Object.keys(elGen).find(k => elGen[k] === dayEl);
+  const support = counts[dayEl] + counts[genEl];
+  const against = counts[elGen[dayEl]] + counts[elRes[dayEl]];
+
+  // Simple strength estimation
+  let strength;
+  if (supportedByMonth && support >= against + 2) strength = '旺';
+  else if (supportedByMonth && support >= against) strength = '偏旺';
+  else if (!supportedByMonth && support >= against + 1) strength = '中和偏旺';
+  else if (!supportedByMonth && support <= against - 2) strength = '弱';
+  else if (!supportedByMonth && support <= against - 1) strength = '偏弱';
+  else strength = '中和';
+
+  return { dayEl, strength, supportedByMonth, support, against, genEl };
+}
+
+function getFavorAvoid(dayEl, strength) {
+  const isStrong = strength === '旺' || strength === '偏旺';
+  const isWeak = strength === '弱' || strength === '偏弱';
+
+  let favorable, unfavorable;
+  if (isWeak) {
+    // 身弱: 喜印(生我)和比劫(同类)
+    favorable = [elGen[dayEl] ? Object.keys(elGen).find(k => elGen[k] === dayEl) : null, dayEl];
+    unfavorable = [elGen[dayEl], elRes[dayEl]]; // 食伤泄 + 财耗
+  } else if (isStrong) {
+    // 身旺: 喜克泄耗
+    favorable = [elGen[dayEl], elRes[dayEl]]; // 食伤泄 + 财耗
+    unfavorable = [Object.keys(elGen).find(k => elGen[k] === dayEl), dayEl]; // 印生 + 比劫助
+  } else {
+    // 中和: 都可以，略偏
+    favorable = [dayEl, elGen[dayEl] ? Object.keys(elGen).find(k => elGen[k] === dayEl) : null];
+    unfavorable = [elGen[dayEl], elRes[dayEl]];
+  }
+  return { favorable: favorable.filter(Boolean), unfavorable: unfavorable.filter(Boolean) };
+}
+
+function calculateBazi() {
+  const year = parseInt(document.getElementById('year').value);
+  const month = parseInt(document.getElementById('month').value);
+  const day = parseInt(document.getElementById('day').value);
+  const hourIdx = parseInt(document.getElementById('hour').value);
+  const gender = document.getElementById('gender').value;
+
+  const yearP = getYearPillar(year);
+  const monthBranchIdx = getMonthBranch(month, day);
+  const monthStemIdx = getMonthStem(yearP.stem, monthBranchIdx);
+  const monthP = { stem: monthStemIdx, branch: monthBranchIdx };
+  const dayP = getDayPillar(year, month, day);
+  const hourP = getHourPillar(dayP.stem, hourIdx);
+
+  const pillars = [yearP, monthP, dayP, hourP].filter(p => p !== null);
+  const allPillars = [yearP, monthP, dayP, hourP];
+  const counts = countElements(allPillars);
+  const analysis = analyzeDayMaster(dayP.stem, counts, monthBranchIdx);
+  const favorAvoid = getFavorAvoid(analysis.dayEl, analysis.strength);
+
+  renderResults(yearP, monthP, dayP, hourP, counts, analysis, favorAvoid);
+  renderCompass(favorAvoid);
+}
+
+function renderResults(yearP, monthP, dayP, hourP, counts, analysis, favorAvoid) {
+  const pillarLabels = ['年柱', '月柱', '日柱', '时柱'];
+  const pillarData = [yearP, monthP, dayP, hourP];
+
+  let html = '<div class="fade-in">';
+
+  // Pillar grid
+  html += '<div class="pillar-grid">';
+  pillarData.forEach((p, i) => {
+    if (!p) {
+      html += `<div class="pillar"><div class="pillar-label">${pillarLabels[i]}</div><div style="color:var(--text-dim);font-size:14px;padding:20px 0;">未知</div></div>`;
+      return;
+    }
+    const stemEl = getStemEl(p.stem);
+    const branchEl = getBranchEl(p.branch);
+    html += `<div class="pillar">
+      <div class="pillar-label">${pillarLabels[i]}</div>
+      <div class="pillar-stem" style="color:${elColors[stemEl]}">${stems[p.stem]}</div>
+      <div class="pillar-branch" style="color:${elColors[branchEl]}">${branches[p.branch]}</div>
+      <div class="pillar-element">${elNames[stemEl]} · ${elNames[branchEl]}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // Day master summary
+  html += `<div class="result-section">
+    <h4>日主分析</h4>
+    <div class="result-summary">
+      日主 <strong style="color:${elColors[analysis.dayEl]}">${stems[dayP.stem]}（${elNames[analysis.dayEl]}）</strong>
+      · 身<strong>${analysis.strength}</strong>
+      · ${analysis.supportedByMonth ? '得令' : '失令'}
+      · 扶助 ${analysis.support} vs 消耗 ${analysis.against}
+    </div>
+  </div>`;
+
+  // Five elements balance bar
+  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+  html += '<div class="result-section"><h4>五行分布</h4>';
+  html += '<div class="elements-bar">';
+  ['wood','fire','earth','metal','water'].forEach(el => {
+    const pct = (counts[el] / total * 100);
+    if (counts[el] > 0) {
+      html += `<div style="width:${pct}%;background:${elColors[el]};color:#0d1117;">${counts[el]}</div>`;
+    }
+  });
+  html += '</div>';
+  html += '<div class="el-legend">';
+  html += '<span class="l-wood">木 ' + counts.wood + '</span>';
+  html += '<span class="l-fire">火 ' + counts.fire + '</span>';
+  html += '<span class="l-earth">土 ' + counts.earth + '</span>';
+  html += '<span class="l-metal">金 ' + counts.metal + '</span>';
+  html += '<span class="l-water">水 ' + counts.water + '</span>';
+  html += '</div></div>';
+
+  // Favor / Avoid
+  html += '<div class="result-section"><h4>喜用神</h4><div class="favor-box">';
+  favorAvoid.favorable.forEach(el => {
+    html += `<span class="el-badge ${el}">${elNames[el]}</span>`;
+  });
+  html += '</div></div>';
+
+  html += '<div class="result-section"><h4>忌神</h4><div class="avoid-box">';
+  favorAvoid.unfavorable.forEach(el => {
+    html += `<span class="el-badge ${el}">${elNames[el]}</span>`;
+  });
+  html += '</div></div>';
+
+  // Direction summary
+  html += '<div class="result-section"><h4>方位吉凶速览</h4>';
+  html += '<div class="dir-result-grid">';
+  directions.forEach(d => {
+    let rating, ratingClass;
+    if (favorAvoid.favorable.includes(d.el)) {
+      rating = '大吉'; ratingClass = 'great';
+    } else if (favorAvoid.favorable.some(fe => elGen[fe] === d.el)) {
+      rating = '吉'; ratingClass = 'good';
+    } else if (favorAvoid.unfavorable.includes(d.el)) {
+      rating = '凶'; ratingClass = 'bad';
+    } else if (favorAvoid.unfavorable.some(ue => elGen[ue] === d.el)) {
+      rating = '大凶'; ratingClass = 'terrible';
+    } else {
+      rating = '平'; ratingClass = 'neutral';
+    }
+    html += `<div class="dir-result-item">
+      <span class="dir-name">${d.name}</span>
+      <span class="el-badge ${d.el}" style="margin-right:auto;margin-left:8px;">${elNames[d.el]}</span>
+      <span class="dir-rating ${ratingClass}">${rating}</span>
+    </div>`;
+  });
+  html += '</div></div>';
+
+  html += '</div>';
+  document.getElementById('results').innerHTML = html;
+}
+
+// ===== Compass Rendering =====
+function renderCompass(favorAvoid) {
+  const svg = document.getElementById('compass');
+  const cx = 200, cy = 200;
+  const outerR = 180, innerR = 110, centerR = 50;
+
+  let html = '';
+
+  // Background circles
+  html += `<circle cx="${cx}" cy="${cy}" r="${outerR}" fill="#161b22" stroke="#30363d" stroke-width="1"/>`;
+  html += `<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="#0d1117" stroke="#30363d" stroke-width="0.5"/>`;
+  html += `<circle cx="${cx}" cy="${cy}" r="${centerR}" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>`;
+
+  // Direction sectors
+  directions.forEach(d => {
+    const angle = d.angle - 90; // SVG: 0 = right, we want 0 = top (north)
+    const startAngle = (angle - 22.5) * Math.PI / 180;
+    const endAngle = (angle + 22.5) * Math.PI / 180;
+
+    const x1 = cx + outerR * Math.cos(startAngle);
+    const y1 = cy + outerR * Math.sin(startAngle);
+    const x2 = cx + outerR * Math.cos(endAngle);
+    const y2 = cy + outerR * Math.sin(endAngle);
+
+    const x3 = cx + innerR * Math.cos(endAngle);
+    const y3 = cy + innerR * Math.sin(endAngle);
+    const x4 = cx + innerR * Math.cos(startAngle);
+    const y4 = cy + innerR * Math.sin(startAngle);
+
+    let fillColor = elColors[d.el] + '20'; // 12.5% opacity
+    let strokeColor = elColors[d.el] + '60';
+    let strokeWidth = '0.5';
+
+    // Highlight based on favor/avoid
+    if (favorAvoid.favorable.includes(d.el)) {
+      fillColor = elColors[d.el] + '40';
+      strokeColor = elColors[d.el];
+      strokeWidth = '1.5';
+    } else if (favorAvoid.unfavorable.includes(d.el)) {
+      fillColor = '#f8514915';
+      strokeColor = '#f8514960';
+      strokeWidth = '1';
+    }
+
+    html += `<path d="M ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${strokeWidth}"/>`;
+
+    // Direction label
+    const labelR = (outerR + innerR) / 2;
+    const lx = cx + labelR * Math.cos(angle * Math.PI / 180);
+    const ly = cy + labelR * Math.sin(angle * Math.PI / 180);
+
+    html += `<text x="${lx}" y="${ly - 6}" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="${elColors[d.el]}" font-family="sans-serif">${d.name}</text>`;
+    html += `<text x="${lx}" y="${ly + 10}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#8b949e" font-family="sans-serif">${elNames[d.el]}</text>`;
+  });
+
+  // Direction lines
+  for (let i = 0; i < 8; i++) {
+    const a = (i * 45 - 90 - 22.5) * Math.PI / 180;
+    const x = cx + outerR * Math.cos(a);
+    const y = cy + outerR * Math.sin(a);
+    const xi = cx + innerR * Math.cos(a);
+    const yi = cy + innerR * Math.sin(a);
+    html += `<line x1="${x}" y1="${y}" x2="${xi}" y2="${yi}" stroke="#30363d" stroke-width="0.5"/>`;
+  }
+
+  // Center text
+  html += `<text x="${cx}" y="${cy - 8}" text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="600" fill="#e6edf3" font-family="sans-serif">方位</text>`;
+  html += `<text x="${cx}" y="${cy + 10}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#8b949e" font-family="sans-serif">指南针</text>`;
+
+  // Cardinal labels on outer ring
+  const cardinals = [
+    { label: 'N', angle: -90 },
+    { label: 'E', angle: 0 },
+    { label: 'S', angle: 90 },
+    { label: 'W', angle: 180 }
+  ];
+  cardinals.forEach(c => {
+    const r = outerR + 14;
+    const x = cx + r * Math.cos(c.angle * Math.PI / 180);
+    const y = cy + r * Math.sin(c.angle * Math.PI / 180);
+    html += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#6e7681" font-family="sans-serif">${c.label}</text>`;
+  });
+
+  svg.innerHTML = html;
+
+  // Show info panels
+  const infoEl = document.getElementById('compassInfo');
+  infoEl.style.display = 'grid';
+
+  const greatEl = document.getElementById('greatDirs');
+  const badEl = document.getElementById('badDirs');
+  greatEl.innerHTML = '';
+  badEl.innerHTML = '';
+
+  directions.forEach(d => {
+    if (favorAvoid.favorable.includes(d.el)) {
+      const li = document.createElement('li');
+      li.style.color = elColors[d.el];
+      li.innerHTML = `<span style="background:${elColors[d.el]}"></span>${d.name}（${elNames[d.el]}）`;
+      greatEl.appendChild(li);
+    }
+    if (favorAvoid.unfavorable.includes(d.el)) {
+      const li = document.createElement('li');
+      li.style.color = '#f85149';
+      li.innerHTML = `<span style="background:#f85149"></span>${d.name}（${elNames[d.el]}）`;
+      badEl.appendChild(li);
+    }
+  });
+
+  if (greatEl.children.length === 0) greatEl.innerHTML = '<li style="color:var(--text-dim)">暂无</li>';
+  if (badEl.children.length === 0) badEl.innerHTML = '<li style="color:var(--text-dim)">暂无</li>';
+}
+
+// Initial compass render (empty state)
+renderCompass({ favorable: ['water','wood'], unfavorable: ['fire','earth'] });
+document.getElementById('compassInfo').style.display = 'grid';
+
+// Set GitHub link
+document.getElementById('ghLink').href = 'https://github.com/iPythoning/bazi-fengshui-skill';
+</script>
+</body>
+</html>
