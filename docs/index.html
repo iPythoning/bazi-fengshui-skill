@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>八字风水分析工具 · Bazi Fengshui Skill</title>
+<title>八字风水分析工具 · 完整报告生成器</title>
 <style>
 :root {
   --bg: #0d1117;
@@ -20,6 +20,7 @@
   --metal: #d1d5da;
   --water: #58a6ff;
   --radius: 12px;
+  --radius-sm: 8px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -29,165 +30,79 @@ body {
   line-height: 1.6;
   font-size: 15px;
 }
-.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+.container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
 
 /* Hero */
 .hero {
   text-align: center;
-  padding: 80px 24px 60px;
+  padding: 60px 24px 48px;
   border-bottom: 1px solid var(--border);
 }
-.hero h1 {
-  font-size: 36px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  letter-spacing: -0.5px;
-}
+.hero h1 { font-size: 32px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.5px; }
 .hero h1 .badge {
-  font-size: 14px;
-  vertical-align: middle;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 3px 10px;
-  border-radius: 20px;
-  margin-left: 8px;
-  color: var(--accent);
+  font-size: 13px; vertical-align: middle; background: var(--bg-card);
+  border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px;
+  margin-left: 8px; color: var(--accent);
 }
-.hero p {
-  font-size: 17px;
-  color: var(--text-muted);
-  max-width: 600px;
-  margin: 0 auto;
-}
-.hero-tags {
-  margin-top: 20px;
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
+.hero p { font-size: 16px; color: var(--text-muted); max-width: 640px; margin: 0 auto; }
+.hero-tags { margin-top: 16px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .hero-tags span {
-  font-size: 13px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-muted);
+  font-size: 12px; padding: 4px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted);
 }
 
 /* Section */
-.section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+.section { padding: 48px 0; border-bottom: 1px solid var(--border); }
 .section:last-child { border-bottom: none; }
-.section h2 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-.section-desc {
-  color: var(--text-muted);
-  font-size: 14px;
-  margin-bottom: 32px;
-}
+.section h2 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+.section-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
 
-/* Calculator */
-.calc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+/* Form */
+.form-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
 }
-@media (max-width: 768px) { .calc-grid { grid-template-columns: 1fr; } }
-
-.calc-form {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
+.form-card h3 { font-size: 16px; margin-bottom: 20px; font-weight: 500; }
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
 }
-.calc-form h3 { font-size: 16px; margin-bottom: 20px; font-weight: 500; }
-.form-row { margin-bottom: 16px; }
-.form-row label {
-  display: block;
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
+@media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
 .form-row select, .form-row input {
-  width: 100%;
-  padding: 10px 14px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 15px;
-  font-family: inherit;
-  transition: border-color 0.2s;
+  width: 100%; padding: 9px 12px; background: var(--bg);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-size: 14px; font-family: inherit; transition: border-color 0.2s;
 }
-.form-row select:focus, .form-row input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
+.form-row select:focus, .form-row input:focus { outline: none; border-color: var(--accent); }
 .form-row-inline { display: flex; gap: 12px; }
 .form-row-inline > div { flex: 1; }
+.form-section-title {
+  font-size: 13px; font-weight: 600; color: var(--accent);
+  margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
 .btn-calc {
-  width: 100%;
-  padding: 12px;
-  background: #238636;
-  border: 1px solid #2ea043;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-family: inherit;
+  width: 100%; padding: 14px; margin-top: 8px;
+  background: #238636; border: 1px solid #2ea043; border-radius: var(--radius-sm);
+  color: #fff; font-size: 16px; font-weight: 500; cursor: pointer;
+  transition: background 0.2s; font-family: inherit;
 }
 .btn-calc:hover { background: #2ea043; }
-.disclaimer {
-  margin-top: 16px;
-  font-size: 12px;
-  color: var(--text-dim);
-  line-height: 1.5;
-}
+.disclaimer { margin-top: 12px; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
 
-/* Results */
-.calc-results {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  min-height: 300px;
-}
-.results-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  min-height: 250px;
-  color: var(--text-dim);
-  font-size: 14px;
-  text-align: center;
-}
+/* Pillars */
 .pillar-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
 }
 .pillar {
-  text-align: center;
-  padding: 16px 8px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
+  text-align: center; padding: 14px 6px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg);
 }
-.pillar-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-.pillar-stem, .pillar-branch {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-.pillar-element { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+.pillar-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.pillar-stem, .pillar-branch { font-size: 22px; font-weight: 600; line-height: 1.3; }
+.pillar-element { font-size: 10px; color: var(--text-dim); margin-top: 3px; }
 
+/* Element badges */
 .el-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
 .el-badge.wood { color: var(--wood); background: rgba(63,185,80,0.12); }
 .el-badge.fire { color: var(--fire); background: rgba(248,81,73,0.12); }
@@ -195,57 +110,43 @@ body {
 .el-badge.metal { color: var(--metal); background: rgba(209,213,218,0.12); }
 .el-badge.water { color: var(--water); background: rgba(88,166,255,0.12); }
 
-.result-section { margin-bottom: 20px; }
-.result-section h4 { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
-.favor-box, .avoid-box {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+/* Result sections */
+.result-box {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
 }
-.favor-box .el-badge, .avoid-box .el-badge { font-size: 14px; padding: 4px 12px; }
-.result-summary {
-  padding: 12px 16px;
-  border-radius: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  font-size: 14px;
-  color: var(--text);
-}
+.result-box h3 { font-size: 17px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.result-box h3 .icon { font-size: 20px; }
 
-/* Five Elements Balance */
-.elements-bar {
-  display: flex;
-  height: 32px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  margin-bottom: 8px;
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; background: var(--bg); color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg-hover); }
+
+/* Rating badges */
+.rating { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.rating.great { color: var(--wood); background: rgba(63,185,80,0.15); }
+.rating.good { color: var(--accent); background: rgba(88,166,255,0.12); }
+.rating.neutral { color: var(--text-muted); background: rgba(139,148,158,0.12); }
+.rating.bad { color: var(--earth); background: rgba(210,153,34,0.12); }
+.rating.terrible { color: var(--fire); background: rgba(248,81,73,0.12); }
+
+/* Summary box */
+.summary-box {
+  background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(63,185,80,0.08));
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px 24px; margin-top: 20px;
 }
-.elements-bar > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  transition: width 0.6s ease;
-  min-width: 0;
-}
-.el-legend {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-.el-legend span::before {
-  content: '';
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 4px;
-  vertical-align: middle;
-}
+.summary-box h3 { font-size: 14px; color: var(--accent); margin-bottom: 10px; }
+.summary-box p { font-size: 15px; line-height: 1.8; color: var(--text); }
+
+/* Elements bar */
+.elements-bar { display: flex; height: 28px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); margin-bottom: 6px; }
+.elements-bar > div { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; transition: width 0.6s ease; min-width: 0; }
+.el-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); }
+.el-legend span::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 .el-legend .l-wood::before { background: var(--wood); }
 .el-legend .l-fire::before { background: var(--fire); }
 .el-legend .l-earth::before { background: var(--earth); }
@@ -253,167 +154,80 @@ body {
 .el-legend .l-water::before { background: var(--water); }
 
 /* Compass */
-.compass-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-.compass-info {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
+.compass-wrap { display: flex; justify-content: center; }
+.compass-info { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 600px) { .compass-info { grid-template-columns: 1fr; } }
-.compass-info > div {
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-}
+.compass-info > div { padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); }
 .compass-info h4 { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
 .compass-info ul { list-style: none; font-size: 13px; }
-.compass-info li { padding: 4px 0; display: flex; align-items: center; gap: 8px; }
-.compass-info li::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+.compass-info li { padding: 3px 0; display: flex; align-items: center; gap: 8px; }
 
-/* Pipeline */
-.pipeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.pipeline-step {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  position: relative;
-}
-.pipeline-step:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  left: 15px;
-  top: 36px;
-  bottom: -12px;
-  width: 2px;
-  background: var(--border);
-}
-.pipeline-num {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--bg-card);
-  border: 2px solid var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent);
-  flex-shrink: 0;
-  z-index: 1;
-}
-.pipeline-body { padding-bottom: 24px; flex: 1; }
-.pipeline-body h4 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-.pipeline-body p { font-size: 13px; color: var(--text-muted); }
+/* Tier sections */
+.tier-section { margin-bottom: 18px; }
+.tier-header { font-size: 15px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.tier-badge { font-size: 12px; padding: 2px 8px; border-radius: 4px; }
 
-/* Skill Structure */
-.skill-tree {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 13px;
-  line-height: 2;
-  overflow-x: auto;
-}
-.skill-tree .dir { color: var(--accent); }
-.skill-tree .file { color: var(--text); }
-.skill-tree .desc { color: var(--text-dim); }
-.skill-tree .hl { color: var(--wood); }
+/* Priority table */
+.priority-row td:first-child { font-weight: 600; }
+.priority-P0 { color: var(--fire); }
+.priority-P1 { color: var(--earth); }
+.priority-P2 { color: var(--accent); }
+.priority-P3 { color: var(--wood); }
+.priority-P4 { color: var(--text-muted); }
 
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 40px 24px;
-  color: var(--text-dim);
-  font-size: 13px;
-  border-top: 1px solid var(--border);
+/* Placeholder */
+.placeholder {
+  text-align: center; padding: 60px 20px; color: var(--text-dim);
 }
-.footer a { color: var(--accent); text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
+.placeholder .icon { font-size: 48px; margin-bottom: 12px; }
 
 /* Animations */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .fade-in { animation: fadeIn 0.4s ease; }
 
-/* Direction result */
-.dir-result-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-top: 16px;
-}
-.dir-result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  border: 1px solid var(--border);
-}
-.dir-result-item .dir-name { font-weight: 500; }
-.dir-result-item .dir-rating { font-size: 12px; padding: 2px 8px; border-radius: 4px; }
-.dir-rating.great { color: var(--wood); background: rgba(63,185,80,0.12); }
-.dir-rating.good { color: var(--accent); background: rgba(88,166,255,0.12); }
-.dir-rating.neutral { color: var(--text-muted); background: rgba(139,148,158,0.12); }
-.dir-rating.bad { color: var(--earth); background: rgba(210,153,34,0.12); }
-.dir-rating.terrible { color: var(--fire); background: rgba(248,81,73,0.12); }
+/* Action checklist */
+.checklist { list-style: none; }
+.checklist li { padding: 6px 0; padding-left: 24px; position: relative; font-size: 14px; }
+.checklist li::before { content: '☐'; position: absolute; left: 0; color: var(--accent); }
+
+/* Footer */
+.footer { text-align: center; padding: 32px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid var(--border); }
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* Cost tag */
+.cost-tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+.cost-free { color: var(--wood); background: rgba(63,185,80,0.1); }
+.cost-low { color: var(--accent); background: rgba(88,166,255,0.1); }
+.cost-high { color: var(--earth); background: rgba(210,153,34,0.1); }
 </style>
 </head>
 <body>
 
 <!-- Hero -->
 <div class="hero">
-  <h1>八字风水分析工具 <span class="badge">Skill</span></h1>
-  <p>输入出生年月日，自动推算八字喜忌五行，生成个性化方位吉凶判断、板块推荐、风水优化与搬迁规划。</p>
+  <h1>八字风水分析工具 <span class="badge">完整报告</span></h1>
+  <p>输入出生信息与当前情况，自动推算八字喜忌，生成方位吉凶、板块推荐、住址优化、公司改造、搬迁规划的完整个性化报告。</p>
   <div class="hero-tags">
-    <span>四柱推算</span>
-    <span>方位吉凶</span>
-    <span>板块推荐</span>
-    <span>风水优化</span>
-    <span>搬迁规划</span>
+    <span>四柱推算</span><span>方位吉凶表</span><span>分梯队推荐</span><span>楼层化解</span><span>公司改造</span><span>搬迁规划</span>
   </div>
 </div>
 
-<!-- Bazi Calculator -->
+<!-- Input Form -->
 <div class="section">
   <div class="container">
-    <h2>八字排盘计算器</h2>
-    <p class="section-desc">输入出生信息，自动推算四柱八字、五行分布与喜用忌神</p>
-    <div class="calc-grid">
-      <div class="calc-form">
-        <h3>出生信息</h3>
+    <h2>输入信息</h2>
+    <p class="section-desc">填写出生信息与当前情况，生成完整风水分析报告</p>
+    <div class="form-card">
+      <div class="form-section-title">出生信息</div>
+      <div class="form-grid">
         <div class="form-row">
           <label>公历年份</label>
           <select id="year"></select>
         </div>
         <div class="form-row form-row-inline">
-          <div>
-            <label>月份</label>
-            <select id="month"></select>
-          </div>
-          <div>
-            <label>日期</label>
-            <select id="day"></select>
-          </div>
+          <div><label>月份</label><select id="month"></select></div>
+          <div><label>日期</label><select id="day"></select></div>
         </div>
         <div class="form-row">
           <label>时辰（不清楚可选"未知"）</label>
@@ -421,122 +235,105 @@ body {
         </div>
         <div class="form-row">
           <label>性别</label>
-          <select id="gender">
-            <option value="male">男</option>
-            <option value="female">女</option>
+          <select id="gender"><option value="male">男</option><option value="female">女</option></select>
+        </div>
+      </div>
+
+      <div class="form-section-title">所在城市与住址</div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>所在城市</label>
+          <select id="city">
+            <option value="杭州">杭州</option>
+            <option value="北京">北京</option>
+            <option value="上海">上海</option>
+            <option value="深圳">深圳</option>
+            <option value="广州">广州</option>
+            <option value="成都">成都</option>
+            <option value="武汉">武汉</option>
+            <option value="南京">南京</option>
+            <option value="西安">西安</option>
+            <option value="重庆">重庆</option>
+            <option value="苏州">苏州</option>
+            <option value="天津">天津</option>
+            <option value="其他">其他城市</option>
           </select>
         </div>
-        <button class="btn-calc" onclick="calculateBazi()">开始排盘</button>
-        <p class="disclaimer">
-          本工具基于干支历法推算，供学习参考使用。<br>
-          精确排盘建议使用专业软件（如 lunar-python）。<br>
-          月柱以节气为界，此处使用近似日期划分。
-        </p>
-      </div>
-      <div class="calc-results" id="results">
-        <div class="results-placeholder">
-          填写出生信息后点击「开始排盘」<br>查看八字分析结果
+        <div class="form-row">
+          <label>当前住址（小区名，选填）</label>
+          <input type="text" id="residence" placeholder="如：望宸名邸">
+        </div>
+        <div class="form-row">
+          <label>楼层</label>
+          <input type="number" id="floor" placeholder="如：17" min="1" max="60">
+        </div>
+        <div class="form-row">
+          <label>所在区域/方位（选填）</label>
+          <input type="text" id="district" placeholder="如：拱墅半山">
         </div>
       </div>
+
+      <div class="form-section-title">公司/办公地（选填）</div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>公司地址/名称（选填）</label>
+          <input type="text" id="company" placeholder="如：首章新所">
+        </div>
+        <div class="form-row">
+          <label>公司楼层</label>
+          <input type="number" id="companyFloor" placeholder="如：2" min="-3" max="60">
+        </div>
+        <div class="form-row">
+          <label>公司所在区域/方位</label>
+          <input type="text" id="companyDistrict" placeholder="如：上城区">
+        </div>
+        <div class="form-row">
+          <label>管理模式</label>
+          <select id="manageMode">
+            <option value="local">本地办公</option>
+            <option value="remote">远程管理</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section-title">特殊情况（影响优先级排序）</div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>经济状况</label>
+          <select id="finance">
+            <option value="stable">稳定，有余力</option>
+            <option value="startup">创业期</option>
+            <option value="debt">有负债压力</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>其他说明（选填）</label>
+          <input type="text" id="notes" placeholder="如：远程管理武汉公司">
+        </div>
+      </div>
+
+      <button class="btn-calc" onclick="generateReport()">生成完整风水分析报告</button>
+      <p class="disclaimer">
+        本工具基于干支历法与五行生克理论推算，供学习参考使用。<br>
+        月柱以节气为界（此处使用近似日期），精确排盘建议使用专业软件。
+      </p>
     </div>
   </div>
 </div>
 
-<!-- Direction Compass -->
-<div class="section">
+<!-- Report Output -->
+<div class="section" id="reportSection" style="display:none;">
   <div class="container">
-    <h2>方位吉凶指南针</h2>
-    <p class="section-desc">基于八字喜忌五行，判断八个方位的吉凶等级</p>
-    <div class="compass-wrap" id="compassWrap">
-      <svg id="compass" width="400" height="400" viewBox="0 0 400 400"></svg>
-    </div>
-    <div class="compass-info" id="compassInfo" style="display:none;">
-      <div>
-        <h4>大吉方位（用神方）</h4>
-        <ul id="greatDirs"></ul>
-      </div>
-      <div>
-        <h4>大凶方位（忌神方）</h4>
-        <ul id="badDirs"></ul>
-      </div>
-    </div>
+    <div id="reportContent"></div>
   </div>
 </div>
 
-<!-- Analysis Pipeline -->
-<div class="section">
+<!-- Placeholder -->
+<div class="section" id="placeholderSection">
   <div class="container">
-    <h2>分析流程</h2>
-    <p class="section-desc">从输入到输出的七步分析管线</p>
-    <div class="pipeline">
-      <div class="pipeline-step">
-        <div class="pipeline-num">1</div>
-        <div class="pipeline-body">
-          <h4>收集信息</h4>
-          <p>出生年月日时辰、性别、所在城市、当前住址、公司地址、特殊情况（负债/远程管理等）</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">2</div>
-        <div class="pipeline-body">
-          <h4>推算八字喜忌</h4>
-          <p>排四柱 → 定日主旺衰 → 确定喜用神（补益日主的五行）与忌神（消耗日主的五行）</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">3</div>
-        <div class="pipeline-body">
-          <h4>方位吉凶判断</h4>
-          <p>城市中心为原点划分八方位 → 结合自然地理修正五行 → 对照喜忌评级（大吉/吉/平/凶/大凶）</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">4</div>
-        <div class="pipeline-body">
-          <h4>板块推荐</h4>
-          <p>按五行契合度分梯队 → 标注小区举例、五行优势、价格区间、适配理由 → 考虑经济状况调整</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">5</div>
-        <div class="pipeline-body">
-          <h4>住址/办公地优化</h4>
-          <p>分析楼层五行与周边环境 → 提供颜色/方向/摆件/绿植化解方案 → 优先零成本/低成本</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">6</div>
-        <div class="pipeline-body">
-          <h4>搬迁优先级排序</h4>
-          <p>P0立即改造 → P1本周优化 → P2考察准备 → P3长期落定 → P4远期迁移 → 结合流年吉凶调整时间</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="pipeline-num">7</div>
-        <div class="pipeline-body">
-          <h4>输出完整报告</h4>
-          <p>方位吉凶表 + 分梯队推荐表 + 优化方案表 + 优先级行动表 + 一句话总结</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Skill Structure -->
-<div class="section">
-  <div class="container">
-    <h2>Skill 文件结构</h2>
-    <p class="section-desc">渐进式加载设计：SKILL.md 精简，详细数据按需从 references 加载</p>
-    <div class="skill-tree">
-<span class="dir">bazi-fengshui-general/</span>
-├── <span class="hl">SKILL.md</span>                          <span class="desc"># 主技能文件（~1.5k words）</span>
-│                                    <span class="desc">  概述、执行流程七步、输出规范</span>
-└── <span class="dir">references/</span>
-    ├── <span class="file">bazi-calculation.md</span>         <span class="desc"># 四柱排法、旺衰判断、喜忌确定</span>
-    ├── <span class="file">direction-analysis.md</span>       <span class="desc"># 方位五行、吉凶评级、板块推荐方法</span>
-    ├── <span class="file">optimization-guide.md</span>       <span class="desc"># 楼层化解、环境分析、布局对照表</span>
-    ├── <span class="file">relocation-plan.md</span>          <span class="desc"># P0-P4 体系、流年配合、行动模板</span>
-    └── <span class="file">output-templates.md</span>         <span class="desc"># 标准输出格式与模板</span>
+    <div class="placeholder">
+      <div class="icon">⚖️</div>
+      <p>填写上方信息后点击「生成完整风水分析报告」<br>将自动生成方位吉凶、板块推荐、住址优化、公司改造、搬迁规划等完整报告</p>
     </div>
   </div>
 </div>
@@ -545,26 +342,26 @@ body {
 <div class="section">
   <div class="container">
     <h2>五行对照速查</h2>
-    <p class="section-desc">天干地支、方位、颜色、数字的五行归属</p>
-    <div class="calc-grid">
-      <div class="calc-form">
+    <p class="section-desc">天干地支、方位、颜色、楼层、数字的五行归属</p>
+    <div class="form-grid">
+      <div class="form-card">
         <h3>天干地支五行</h3>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge wood" style="min-width:40px;text-align:center;">木</span><span style="font-size:13px;color:var(--text-muted);">甲乙 · 寅卯辰 · 东方 · 春</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge fire" style="min-width:40px;text-align:center;">火</span><span style="font-size:13px;color:var(--text-muted);">丙丁 · 巳午未 · 南方 · 夏</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge earth" style="min-width:40px;text-align:center;">土</span><span style="font-size:13px;color:var(--text-muted);">戊己 · 辰戌丑未 · 中央 · 四季</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge metal" style="min-width:40px;text-align:center;">金</span><span style="font-size:13px;color:var(--text-muted);">庚辛 · 申酉戌 · 西方 · 秋</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge water" style="min-width:40px;text-align:center;">水</span><span style="font-size:13px;color:var(--text-muted);">壬癸 · 亥子丑 · 北方 · 冬</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge wood" style="min-width:40px;text-align:center;">木</span><span style="font-size:13px;color:var(--text-muted);">甲乙 · 寅卯辰 · 东方 · 春 · 3/8</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge fire" style="min-width:40px;text-align:center;">火</span><span style="font-size:13px;color:var(--text-muted);">丙丁 · 巳午未 · 南方 · 夏 · 2/7</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge earth" style="min-width:40px;text-align:center;">土</span><span style="font-size:13px;color:var(--text-muted);">戊己 · 辰戌丑未 · 中央 · 四季 · 5/0</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge metal" style="min-width:40px;text-align:center;">金</span><span style="font-size:13px;color:var(--text-muted);">庚辛 · 申酉戌 · 西方 · 秋 · 4/9</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge water" style="min-width:40px;text-align:center;">水</span><span style="font-size:13px;color:var(--text-muted);">壬癸 · 亥子丑 · 北方 · 冬 · 1/6</span></div>
         </div>
       </div>
-      <div class="calc-form">
+      <div class="form-card">
         <h3>颜色与楼层五行</h3>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge wood" style="min-width:40px;text-align:center;">木</span><span style="font-size:13px;color:var(--text-muted);">绿/青 · 楼层尾数 3/8</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge fire" style="min-width:40px;text-align:center;">火</span><span style="font-size:13px;color:var(--text-muted);">红/紫 · 楼层尾数 2/7</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge earth" style="min-width:40px;text-align:center;">土</span><span style="font-size:13px;color:var(--text-muted);">黄/棕 · 楼层尾数 5/0</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge metal" style="min-width:40px;text-align:center;">金</span><span style="font-size:13px;color:var(--text-muted);">白/银 · 楼层尾数 4/9</span></div>
-          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge water" style="min-width:40px;text-align:center;">水</span><span style="font-size:13px;color:var(--text-muted);">黑/蓝 · 楼层尾数 1/6</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge wood" style="min-width:40px;text-align:center;">木</span><span style="font-size:13px;color:var(--text-muted);">绿/青 · 楼层尾数 3/8 · 3,8,13,18,23,28楼</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge fire" style="min-width:40px;text-align:center;">火</span><span style="font-size:13px;color:var(--text-muted);">红/紫 · 楼层尾数 2/7 · 2,7,12,17,22,27楼</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge earth" style="min-width:40px;text-align:center;">土</span><span style="font-size:13px;color:var(--text-muted);">黄/棕 · 楼层尾数 5/0 · 5,10,15,20,25,30楼</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge metal" style="min-width:40px;text-align:center;">金</span><span style="font-size:13px;color:var(--text-muted);">白/银 · 楼层尾数 4/9 · 4,9,14,19,24,29楼</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><span class="el-badge water" style="min-width:40px;text-align:center;">水</span><span style="font-size:13px;color:var(--text-muted);">黑/蓝 · 楼层尾数 1/6 · 1,6,11,16,21,26楼</span></div>
         </div>
       </div>
     </div>
@@ -574,176 +371,358 @@ body {
 <!-- Footer -->
 <div class="footer">
   <p>八字风水分析 Skill · 基于 WorkBuddy Skill 框架开发</p>
-  <p style="margin-top:8px;">GitHub: <a href="#" id="ghLink">bazi-fengshui-skill</a> · 供学习参考，非专业风水建议</p>
+  <p style="margin-top:8px;">GitHub: <a href="https://github.com/iPythoning/bazi-fengshui-skill" target="_blank">bazi-fengshui-skill</a> · 供学习参考，非专业风水建议</p>
 </div>
 
 <script>
-// ===== Data =====
+// ===== Core Data =====
 const stems = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const branches = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-const stemElements = ['wood','fire','earth','metal','water']; // pairs: 甲乙=wood...
-const branchElements = ['water','water','wood','wood','earth','fire','fire','earth','metal','metal','earth','water'];
-// branchElements index: 子=water, 丑=earth, 寅=wood, 卯=wood, 辰=earth, 巳=fire, 午=fire, 未=earth, 申=metal, 酉=metal, 戌=earth, 亥=water
-// Wait, let me fix: 子(0)=water, 丑(1)=earth, 寅(2)=wood, 卯(3)=wood, 辰(4)=earth, 巳(5)=fire, 午(6)=fire, 未(7)=earth, 申(8)=metal, 酉(9)=metal, 戌(10)=earth, 亥(11)=water
+const stemElements = ['wood','fire','earth','metal','water'];
 const branchElMap = ['water','earth','wood','wood','earth','fire','fire','earth','metal','metal','earth','water'];
-
 const elNames = { wood: '木', fire: '火', earth: '土', metal: '金', water: '水' };
 const elColors = { wood: '#3fb950', fire: '#f85149', earth: '#d29922', metal: '#d1d5da', water: '#58a6ff' };
-const elGen = { wood: 'fire', fire: 'earth', earth: 'metal', metal: 'water', water: 'wood' }; // 生
-const elRes = { wood: 'earth', fire: 'metal', earth: 'water', metal: 'wood', water: 'fire' }; // 克
+const elGen = { wood: 'fire', fire: 'earth', earth: 'metal', metal: 'water', water: 'wood' };
+const elRes = { wood: 'earth', fire: 'metal', earth: 'water', metal: 'wood', water: 'fire' };
+const elColorNames = {
+  water: '黑、蓝、深蓝、深灰', wood: '绿、青、翠绿', fire: '红、紫、橙、粉',
+  earth: '黄、棕、米色、驼色', metal: '白、银、金、浅灰'
+};
+const elPlantInfo = {
+  water: { type: '水培植物', examples: '水培绿萝、水培富贵竹、水培发财树', count: '1/6盆（水数）' },
+  wood: { type: '土培或水培均可', examples: '绿萝、发财树、琴叶榕、龟背竹', count: '3/8盆（木数）' },
+  fire: { type: '开花植物', examples: '红掌、仙客来、三角梅', count: '2/7盆（火数）' },
+  earth: { type: '土培植物', examples: '多肉、仙人掌、虎皮兰', count: '5/10盆（土数）' },
+  metal: { type: '少放植物或金属盆栽', examples: '银皇后、白色花卉', count: '4/9盆（金数）' }
+};
+const bedroomLayout = {
+  water: { bedDir: '朝北', bedColor: '黑/蓝', curtainColor: '深蓝/黑', avoidDir: '忌朝南（火方）', avoidColor: '忌红/紫' },
+  wood: { bedDir: '朝东/东南', bedColor: '绿', curtainColor: '绿色', avoidDir: '忌朝西（金方）', avoidColor: '忌白/银' },
+  fire: { bedDir: '朝南', bedColor: '红/紫', curtainColor: '红/橙', avoidDir: '忌朝北（水方）', avoidColor: '忌黑/蓝' },
+  earth: { bedDir: '朝西南/东北', bedColor: '黄/棕', curtainColor: '米黄/棕', avoidDir: '忌朝东（木方）', avoidColor: '忌绿' },
+  metal: { bedDir: '朝西/西北', bedColor: '白/金/银', curtainColor: '白/银', avoidDir: '忌朝南（火方）', avoidColor: '忌红/紫' }
+};
+const dirNames = ['正北','东北','正东','东南','正南','西南','正西','西北'];
+const dirElements = ['water','earth','wood','wood','fire','earth','metal','metal'];
+const dirExtraElements = {
+  'water': '纯水', 'earth': '土', 'wood': '木', 'fire': '火', 'metal': '金'
+};
 
-// Direction data: [name, label, element, angle]
-const directions = [
-  { name: '正北', el: 'water', angle: 0 },
-  { name: '东北', el: 'earth', angle: 45 },
-  { name: '正东', el: 'wood', angle: 90 },
-  { name: '东南', el: 'wood', angle: 135 },
-  { name: '正南', el: 'fire', angle: 180 },
-  { name: '西南', el: 'earth', angle: 225 },
-  { name: '正西', el: 'metal', angle: 270 },
-  { name: '西北', el: 'metal', angle: 315 }
-];
-
-// Solar term approximate boundaries for month branches
-// Index 0=寅月(Jan6-Feb3 is 丑月, so monthIndex 0 = 寅月 starts ~Feb4)
-const monthBoundaries = [
-  { branch: 2, start: [2,4] },   // 寅月 Feb 4
-  { branch: 3, start: [3,6] },   // 卯月 Mar 6
-  { branch: 4, start: [4,5] },   // 辰月 Apr 5
-  { branch: 5, start: [5,6] },   // 巳月 May 6
-  { branch: 6, start: [6,6] },   // 午月 Jun 6
-  { branch: 7, start: [7,7] },   // 未月 Jul 7
-  { branch: 8, start: [8,8] },   // 申月 Aug 8
-  { branch: 9, start: [9,8] },   // 酉月 Sep 8
-  { branch: 10, start: [10,8] }, // 戌月 Oct 8
-  { branch: 11, start: [11,7] }, // 亥月 Nov 7
-  { branch: 0, start: [12,8] },  // 子月 Dec 8
-  { branch: 1, start: [1,6] }    // 丑月 Jan 6
-];
-
-// Hour branches
-const hourBranches = [
-  { branch: 0, start: 23, end: 1, name: '子时 23:00-01:00' },
-  { branch: 1, start: 1, end: 3, name: '丑时 01:00-03:00' },
-  { branch: 2, start: 3, end: 5, name: '寅时 03:00-05:00' },
-  { branch: 3, start: 5, end: 7, name: '卯时 05:00-07:00' },
-  { branch: 4, start: 7, end: 9, name: '辰时 07:00-09:00' },
-  { branch: 5, start: 9, end: 11, name: '巳时 09:00-11:00' },
-  { branch: 6, start: 11, end: 13, name: '午时 11:00-13:00' },
-  { branch: 7, start: 13, end: 15, name: '未时 13:00-15:00' },
-  { branch: 8, start: 15, end: 17, name: '申时 15:00-17:00' },
-  { branch: 9, start: 17, end: 19, name: '酉时 17:00-19:00' },
-  { branch: 10, start: 19, end: 21, name: '戌时 19:00-21:00' },
-  { branch: 11, start: 21, end: 23, name: '亥时 21:00-23:00' }
-];
-
-// ===== Init form =====
-function initForm() {
-  const yearSel = document.getElementById('year');
-  for (let y = 1940; y <= 2026; y++) {
-    const opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y + '年';
-    if (y === 1995) opt.selected = true;
-    yearSel.appendChild(opt);
+// ===== City Data =====
+const cityData = {
+  '杭州': {
+    center: '西湖/武林广场',
+    directions: [
+      { name: '正东', areas: '下沙沿江、九堡北、萧山东部', el: 'wood', extra: '木+大水', geo: '钱塘江（大水）+东方木' },
+      { name: '东北', areas: '临平山北、星桥、丁桥', el: 'water', extra: '水木过渡', geo: '临平山（木）+东湖（水）+运河二通道' },
+      { name: '正北', areas: '运河新城北、康桥、崇贤', el: 'water', extra: '纯水', geo: '京杭大运河（大水）' },
+      { name: '正南', areas: '滨江南、萧山南、之江南', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '西湖区南、之江、转塘、富阳东', el: 'earth', extra: '土+火', geo: '山多地势高' },
+      { name: '正西', areas: '西湖区、留下、小和山、闲林', el: 'metal', extra: '金', geo: '西湖金气+群山' },
+      { name: '西北', areas: '三墩、良渚、瓶窑', el: 'metal', extra: '金+土', geo: '良渚山地+地势高' },
+      { name: '东南', areas: '萧山东南、滨江东', el: 'wood', extra: '木+火', geo: '木气生发+偏南火气' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东（木+大水，性价比最高）', area: '下沙沿江', apts: '保利东湾、伊萨卡国际城、观澜时代、宋都晨光国际', advantage: '直面钱塘江（大水），东方木气', price: '杭州洼地', reason: '江景=大水，日出方向木气最旺' },
+      { tier: 1, tierName: '正东（木+大水，性价比最高）', area: '九堡沿江/北', apts: '魅力之城、多立方、九堡大桥北', advantage: '钱塘江支流+九堡湿地（水）', price: '中等偏低', reason: '离市中心近，选九堡北避南' },
+      { tier: 1, tierName: '正东（木+大水，性价比最高）', area: '萧山东部/新街', apts: '郡望府、东南海、翡丽公园', advantage: '萧山东部属木，离钱塘江近', price: '洼地', reason: '木气旺，避开南部火地' },
+      { tier: 2, tierName: '东北（水木过渡，性价比极高）', area: '临平山北/东湖新城', apts: '万科四季都会、杭辰星万里、上坤山语四季', advantage: '临平山（木）+东湖（水）+运河二通道', price: '杭州最低一档', reason: '山北水多，木水相生' },
+      { tier: 2, tierName: '东北（水木过渡，性价比极高）', area: '星桥', apts: '天都城、星桥桂花城、融耀之城', advantage: '上塘河水系（水）+绿化率高（木）', price: '洼地', reason: '古运河水气，价格极低' },
+      { tier: 2, tierName: '东北（水木过渡，性价比极高）', area: '丁桥', apts: '后珠美邻嘉苑、丁桥家苑、泷悦华府', advantage: '丁兰水景（水）+桃花湖公园（水木）', price: '中等偏低', reason: '桃花属木，湖水属水，选丁桥北' },
+      { tier: 3, tierName: '正北（纯水，性价比中等）', area: '运河新城北/康桥', apts: '河语光年、上和公元里、宸文苑', advantage: '京杭大运河（大水）+运河支流', price: '中等', reason: '运河最强水脉，康桥偏西金气混入' },
+      { tier: 3, tierName: '正北（纯水，性价比中等）', area: '崇贤', apts: '旭辉府、群贤府、东澜府', advantage: '运河支流+水网密布', price: '洼地', reason: '水气旺，偏西北金土，不如下沙/临平' }
+    ]
+  },
+  '北京': {
+    center: '天安门/国贸',
+    directions: [
+      { name: '正东', areas: '朝阳东部、通州西部', el: 'wood', extra: '木', geo: '平原开阔，木气生发' },
+      { name: '东北', areas: '望京、顺义、首都机场', el: 'earth', extra: '土+金', geo: '顺义山地+地势偏高' },
+      { name: '正北', areas: '奥运村、昌平、回龙观', el: 'water', extra: '水', geo: '温榆河水系' },
+      { name: '正南', areas: '大兴、亦庄南', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '丰台、房山', el: 'earth', extra: '土', geo: '西山余脉+地势高' },
+      { name: '正西', areas: '石景山、门头沟', el: 'metal', extra: '金+土', geo: '西山金气+山地' },
+      { name: '西北', areas: '海淀、西北旺', el: 'metal', extra: '金', geo: '西山+科技区金气' },
+      { name: '东南', areas: '亦庄、大兴东', el: 'wood', extra: '木+火', geo: '平原+偏南火气' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东/正北（木水补益）', area: '通州运河商务区', apts: '运河明珠、K2百合湾、京贸国际城', advantage: '运河（水）+东方木气', price: '中等偏低', reason: '运河水脉+通州副中心发展' },
+      { tier: 1, tierName: '正东/正北（木水补益）', area: '朝阳东部', apts: '常营、管庄、朝阳北路沿线', advantage: '平原开阔木气+朝阳公园水系', price: '中等', reason: '木气生发，交通便利' },
+      { tier: 2, tierName: '正北（纯水补印）', area: '昌平回龙观/天通苑', apts: '天通苑各分区、回龙观各小区', advantage: '温榆河水系（水）', price: '洼地', reason: '水气旺，价格低，适合刚需' },
+      { tier: 2, tierName: '正北（纯水补印）', area: '奥运村/北苑', apts: '奥林匹克花园、北苑家园', advantage: '温榆河+奥运森林公园（水木）', price: '中等偏高', reason: '水木相生，环境好' },
+      { tier: 3, tierName: '东南（木火过渡）', area: '亦庄', apts: '林肯公园、上海沙龙、亦庄各园', advantage: '平原木气+凉水河（水）', price: '中等', reason: '木水兼具，产业园区配套好' }
+    ]
+  },
+  '上海': {
+    center: '人民广场/陆家嘴',
+    directions: [
+      { name: '正东', areas: '浦东东部、曹路、合庆', el: 'wood', extra: '木+大水', geo: '长江入海口（大水）+东海+东方木' },
+      { name: '东北', areas: '杨浦、宝山', el: 'water', extra: '水+金', geo: '黄浦江下游+长江口' },
+      { name: '正北', areas: '宝山北、崇明', el: 'water', extra: '纯大水', geo: '长江口（大水）' },
+      { name: '正南', areas: '闵行南、奉贤', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '松江、金山', el: 'earth', extra: '土', geo: '松江山地+地势高' },
+      { name: '正西', areas: '青浦', el: 'metal', extra: '金+水', geo: '淀山湖（水）+西部' },
+      { name: '西北', areas: '嘉定', el: 'metal', extra: '金', geo: '地势偏高+金气' },
+      { name: '东南', areas: '南汇、临港', el: 'wood', extra: '木+大水', geo: '东海（大水）+东方木' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '临港新片区', apts: '滴水湖馨苑、宜浩佳园、港城新天地', advantage: '东海+滴水湖（大水）+东方木', price: '洼地', reason: '大水+木气，价格低，政策利好' },
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '浦东东部', apts: '曹路、合庆、川沙', advantage: '长江口（大水）+东方木', price: '中等偏低', reason: '水木补益，浦东辐射' },
+      { tier: 2, tierName: '正北/东北（纯水）', area: '宝山', apts: '顾村、罗店、淞宝', advantage: '长江口+黄浦江（大水）', price: '洼地', reason: '水气旺，价格低' },
+      { tier: 2, tierName: '正北/东北（纯水）', area: '杨浦滨江', apts: '杨浦滨江各新盘', advantage: '黄浦江（水）', price: '中等偏高', reason: '水气+市区便利' },
+      { tier: 3, tierName: '正西（金+水）', area: '青浦', apts: '徐泾、赵巷、朱家角', advantage: '淀山湖（大水）+西部', price: '中等', reason: '水气补益，但金气混入' }
+    ]
+  },
+  '深圳': {
+    center: '福田CBD',
+    directions: [
+      { name: '正东', areas: '罗湖东、盐田', el: 'wood', extra: '木+水', geo: '梧桐山（木）+大鹏湾（水）' },
+      { name: '东北', areas: '龙岗、坪山', el: 'earth', extra: '土+木', geo: '龙岗山地+平原' },
+      { name: '正北', areas: '龙华、观澜', el: 'water', extra: '水', geo: '观澜河水系' },
+      { name: '正南', areas: '南山南、蛇口', el: 'fire', extra: '火+水', geo: '深圳湾（水）+向阳' },
+      { name: '西南', areas: '前海、宝安南', el: 'earth', extra: '土+水', geo: '填海区+前海湾' },
+      { name: '正西', areas: '宝安西、西乡', el: 'metal', extra: '金+水', geo: '珠江口（水）+西部' },
+      { name: '西北', areas: '光明', el: 'metal', extra: '金+土', geo: '地势高+山地' },
+      { name: '东南', areas: '大鹏', el: 'wood', extra: '木+大水', geo: '大鹏湾（大水）+山林（木）' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '东南/正东（木+大水）', area: '大鹏新区', apts: '葵涌、大鹏各小区', advantage: '大鹏湾（大水）+山林（木）', price: '洼地', reason: '木水双重补益，生态好' },
+      { tier: 1, tierName: '东南/正东（木+大水）', area: '盐田', apts: '盐田港周边、梅沙', advantage: '大鹏湾（水）+梧桐山（木）', price: '中等偏低', reason: '山海兼备，水木旺' },
+      { tier: 2, tierName: '正北（水）', area: '龙华', apts: '民治、龙华中心、观澜', advantage: '观澜河（水）+北方水气', price: '中等', reason: '水气补印，交通枢纽' },
+      { tier: 2, tierName: '东北（土+木）', area: '龙岗', apts: '龙城、中心城、坪山', advantage: '龙岗河（水）+山地木气', price: '中等偏低', reason: '木水兼具，价格合理' },
+      { tier: 3, tierName: '正西（金+水）', area: '宝安', apts: '西乡、沙井、福永', advantage: '珠江口（水）+西部金气', price: '中等', reason: '水气补益但金气混入' }
+    ]
+  },
+  '广州': {
+    center: '天河/越秀',
+    directions: [
+      { name: '正东', areas: '黄埔、增城', el: 'wood', extra: '木+水', geo: '东江（水）+东方木' },
+      { name: '东北', areas: '白云北、从化', el: 'earth', extra: '土+水', geo: '白云山（土）+流溪河（水）' },
+      { name: '正北', areas: '花都', el: 'water', extra: '水', geo: '流溪河水系' },
+      { name: '正南', areas: '番禺南、南沙', el: 'fire', extra: '火+大水', geo: '珠江口（大水）+向阳' },
+      { name: '西南', areas: '荔湾、佛山', el: 'earth', extra: '土', geo: '老城土气' },
+      { name: '正西', areas: '佛山禅城', el: 'metal', extra: '金', geo: '西部金气' },
+      { name: '西北', areas: '白云西北', el: 'metal', extra: '金+土', geo: '地势偏高' },
+      { name: '东南', areas: '番禺东、黄埔东', el: 'wood', extra: '木+水', geo: '东江+珠江（水）+东方木' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东（木+水）', area: '黄埔/增城', apts: '科学城、知识城、新塘', advantage: '东江（水）+东方木气', price: '中等偏低', reason: '木水补益，产业配套好' },
+      { tier: 1, tierName: '正东（木+水）', area: '番禺东', apts: '大学城、亚运城', advantage: '珠江（水）+东方木', price: '中等', reason: '水木兼具，宜居' },
+      { tier: 2, tierName: '正南（大水）', area: '南沙', apts: '南沙各新盘', advantage: '珠江口（大水）', price: '洼地', reason: '大水补印，政策利好' },
+      { tier: 2, tierName: '正北（水）', area: '花都', apts: '花都各小区', advantage: '流溪河（水）', price: '洼地', reason: '水气旺，价格低' },
+      { tier: 3, tierName: '东北（土+水）', area: '从化', apts: '从化各小区', advantage: '流溪河（水）+山林（木）', price: '洼地', reason: '水木兼具但偏远' }
+    ]
+  },
+  '成都': {
+    center: '春熙路/天府广场',
+    directions: [
+      { name: '正东', areas: '龙泉驿、简阳', el: 'wood', extra: '木', geo: '龙泉山（木）+东方' },
+      { name: '东北', areas: '新都、青白江', el: 'earth', extra: '土', geo: '平原+地势微高' },
+      { name: '正北', areas: '彭州、广汉', el: 'water', extra: '水', geo: '沱江水系' },
+      { name: '正南', areas: '天府新区、双流南', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '双流西、新津', el: 'earth', extra: '土+水', geo: '牧马山+岷江水系' },
+      { name: '正西', areas: '温江、都江堰', el: 'metal', extra: '金+大水', geo: '岷江（大水）+青城山' },
+      { name: '西北', areas: '郫都、都江堰北', el: 'metal', extra: '金+水', geo: '岷江+山地' },
+      { name: '东南', areas: '天府新区东', el: 'wood', extra: '木+火', geo: '平原+偏南' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正西（金+大水）', area: '都江堰/温江', apts: '都江堰各小区、温江光华大道', advantage: '岷江（大水）+青城山（木）', price: '中等偏低', reason: '大水补印，山水兼备' },
+      { tier: 1, tierName: '正西（金+大水）', area: '正东龙泉驿', apts: '龙泉驿各小区', advantage: '龙泉山（木）+东方木气', price: '洼地', reason: '木气补身，价格低' },
+      { tier: 2, tierName: '正北（水）', area: '新都/彭州', apts: '新都各小区、彭州城区', advantage: '沱江水系（水）', price: '洼地', reason: '水气补印，价格低' },
+      { tier: 2, tierName: '西北（金+水）', area: '郫都', apts: '犀浦、郫筒', advantage: '岷江支流（水）', price: '中等偏低', reason: '水气补益，西门外延' },
+      { tier: 3, tierName: '西南（土+水）', area: '双流', apts: '双流各小区', advantage: '岷江支流（水）+牧马山', price: '中等', reason: '水气有但土气混入' }
+    ]
+  },
+  '武汉': {
+    center: '江汉路/洪山广场',
+    directions: [
+      { name: '正东', areas: '青山、洪山东', el: 'wood', extra: '木+大水', geo: '长江（大水）+东湖（水）+东方木' },
+      { name: '东北', areas: '黄陂、新洲', el: 'earth', extra: '土', geo: '大别山余脉' },
+      { name: '正北', areas: '东西湖北', el: 'water', extra: '水', geo: '汉江+府河' },
+      { name: '正南', areas: '江夏、汉南', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '蔡甸、汉阳西', el: 'earth', extra: '土+水', geo: '汉江+地势低' },
+      { name: '正西', areas: '东西湖', el: 'metal', extra: '金+水', geo: '汉江（水）+西部' },
+      { name: '西北', areas: '东西湖北', el: 'metal', extra: '金+土', geo: '地势偏高' },
+      { name: '东南', areas: '光谷东、鄂州', el: 'wood', extra: '木+水', geo: '梁子湖（水）+东方木' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '光谷东', apts: '光谷中心城、花山、左岭', advantage: '梁子湖（水）+东方木气', price: '中等', reason: '木水补益，产业核心' },
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '青山', apts: '青山滨江、红钢城', advantage: '长江（大水）+东湖（水）', price: '中等偏低', reason: '大水补印，江景房' },
+      { tier: 2, tierName: '正北（水）', area: '东西湖', apts: '金银湖、吴家山', advantage: '汉江+府河（水）+金银湖', price: '洼地', reason: '水气旺，价格低' },
+      { tier: 2, tierName: '正北（水）', area: '光谷南/江夏', apts: '庙山、藏龙岛', advantage: '汤逊湖（大水）', price: '中等偏低', reason: '大水补印，宜居' },
+      { tier: 3, tierName: '西南（土+水）', area: '蔡甸', apts: '蔡甸各小区', advantage: '汉江（水）', price: '洼地', reason: '水气有但偏西' }
+    ]
+  },
+  '南京': {
+    center: '新街口',
+    directions: [
+      { name: '正东', areas: '栖霞、仙林', el: 'wood', extra: '木+水', geo: '长江（水）+紫金山（木）' },
+      { name: '东北', areas: '玄武北、栖霞北', el: 'earth', extra: '土+木', geo: '紫金山余脉' },
+      { name: '正北', areas: '浦口、六合', el: 'water', extra: '水', geo: '长江北岸（大水）' },
+      { name: '正南', areas: '江宁南', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '雨花台南', el: 'earth', extra: '土', geo: '地势微高' },
+      { name: '正西', areas: '建邺西', el: 'metal', extra: '金+水', geo: '长江（水）+西部' },
+      { name: '西北', areas: '浦口西北', el: 'metal', extra: '金+土', geo: '老山+地势高' },
+      { name: '东南', areas: '江宁东', el: 'wood', extra: '木+水', geo: '秦淮河（水）+东方木' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东（木+水）', area: '仙林/栖霞', apts: '仙林湖、燕子矶', advantage: '长江+紫金山（木水兼备）', price: '中等', reason: '木水双重补益，环境好' },
+      { tier: 1, tierName: '正东（木+水）', area: '江宁东', apts: '东山、科学园', advantage: '秦淮河（水）+东方木', price: '中等偏低', reason: '水木补益，宜居' },
+      { tier: 2, tierName: '正北（大水）', area: '浦口/江北新区', apts: '桥北、江浦', advantage: '长江北岸（大水）', price: '中等偏低', reason: '大水补印，新区发展' },
+      { tier: 2, tierName: '正北（大水）', area: '六合', apts: '六合各小区', advantage: '滁河（水）', price: '洼地', reason: '水气旺，价格低' },
+      { tier: 3, tierName: '东南（木+水）', area: '江宁南', apts: '百家湖、将军大道', advantage: '秦淮河+百家湖（水）', price: '中等', reason: '水气补益但偏南火气' }
+    ]
+  },
+  '西安': {
+    center: '钟楼',
+    directions: [
+      { name: '正东', areas: '灞桥、临潼', el: 'wood', extra: '木+水', geo: '灞河（水）+骊山（木）' },
+      { name: '东北', areas: '未央北、高陵', el: 'earth', extra: '土', geo: '渭北平原' },
+      { name: '正北', areas: '经开区北', el: 'water', extra: '水', geo: '渭河（大水）' },
+      { name: '正南', areas: '长安南', el: 'fire', extra: '火', geo: '秦岭北麓+向阳' },
+      { name: '西南', areas: '长安西、鄠邑', el: 'earth', extra: '土', geo: '秦岭+地势高' },
+      { name: '正西', areas: '西咸新区', el: 'metal', extra: '金', geo: '沣河+西部金气' },
+      { name: '西北', areas: '空港新城', el: 'metal', extra: '金+土', geo: '地势高+机场' },
+      { name: '东南', areas: '曲江东', el: 'wood', extra: '木+火', geo: '白鹿原+偏南' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东（木+水）', area: '灞桥/浐灞', apts: '浐灞半岛、广运潭', advantage: '灞河+浐河（水）+骊山（木）', price: '中等偏低', reason: '木水兼备，生态宜居' },
+      { tier: 1, tierName: '正东（木+水）', area: '临潼', apts: '临潼各小区', advantage: '骊山（木）+渭河支流（水）', price: '洼地', reason: '木水补益，价格低' },
+      { tier: 2, tierName: '正北（大水）', area: '经开北/草滩', apts: '草滩、北客站', advantage: '渭河（大水）', price: '中等', reason: '大水补印，新区配套' },
+      { tier: 2, tierName: '正北（大水）', area: '高陵', apts: '高陵各小区', advantage: '渭河+泾河（水）', price: '洼地', reason: '泾渭交汇，水气最旺' },
+      { tier: 3, tierName: '东南（木+火）', area: '曲江', apts: '曲江各小区', advantage: '曲江池（水）+南郊', price: '中等偏高', reason: '水气有但偏南火气' }
+    ]
+  },
+  '重庆': {
+    center: '解放碑',
+    directions: [
+      { name: '正东', areas: '江北东、渝北东', el: 'wood', extra: '木+大水', geo: '长江（大水）+东方木' },
+      { name: '东北', areas: '渝北', el: 'earth', extra: '土+木', geo: '铜锣山+山地' },
+      { name: '正北', areas: '北碚', el: 'water', extra: '水', geo: '嘉陵江（大水）' },
+      { name: '正南', areas: '巴南', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '九龙坡西', el: 'earth', extra: '土', geo: '中梁山+地势高' },
+      { name: '正西', areas: '沙坪坝西', el: 'metal', extra: '金+土', geo: '歌乐山+西部' },
+      { name: '西北', areas: '大学城', el: 'metal', extra: '金', geo: '缙云山+地势高' },
+      { name: '东南', areas: '南岸东', el: 'wood', extra: '木+水', geo: '长江+南山（木）' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '江北东/渝北东', apts: '江北嘴、弹子石', advantage: '长江+嘉陵江交汇（大水）+东方木', price: '中等偏高', reason: '大水补印，金融核心' },
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '南岸', apts: '茶园、南山', advantage: '长江（水）+南山（木）', price: '中等', reason: '木水兼备，宜居' },
+      { tier: 2, tierName: '正北（大水）', area: '北碚', apts: '北碚各小区', advantage: '嘉陵江（大水）', price: '洼地', reason: '大水补印，价格低' },
+      { tier: 2, tierName: '正北（大水）', area: '渝北', apts: '两路、回兴', advantage: '嘉陵江支流（水）+山地（木）', price: '中等', reason: '水木兼具，机场配套' },
+      { tier: 3, tierName: '东南（木+水）', area: '巴南', apts: '龙洲湾、鱼洞', advantage: '长江支流（水）', price: '洼地', reason: '水气有但偏南' }
+    ]
+  },
+  '苏州': {
+    center: '观前街',
+    directions: [
+      { name: '正东', areas: '工业园区', el: 'wood', extra: '木+大水', geo: '阳澄湖（水）+金鸡湖（水）+东方木' },
+      { name: '东北', areas: '相城', el: 'earth', extra: '土+水', geo: '渭塘河+平原' },
+      { name: '正北', areas: '相城北', el: 'water', extra: '水', geo: '漕湖+水网密布' },
+      { name: '正南', areas: '吴中南', el: 'fire', extra: '火', geo: '太湖+向阳' },
+      { name: '西南', areas: '吴中西', el: 'earth', extra: '土+大水', geo: '太湖（大水）+穹窿山' },
+      { name: '正西', areas: '高新区西', el: 'metal', extra: '金+土', geo: '大阳山+西部' },
+      { name: '西北', areas: '高新区北', el: 'metal', extra: '金', geo: '虎丘+地势高' },
+      { name: '东南', areas: '昆山方向', el: 'wood', extra: '木+水', geo: '阳澄湖（水）+东方木' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东（木+大水）', area: '工业园区', apts: '湖东、湖西、独墅湖', advantage: '金鸡湖+阳澄湖（大水）+东方木', price: '中等偏高', reason: '木水双重补益，配套好' },
+      { tier: 1, tierName: '正东（木+大水）', area: '吴中东', apts: '尹山湖、郭巷', advantage: '独墅湖+运河（水）+东方木', price: '中等', reason: '水木补益，价格适中' },
+      { tier: 2, tierName: '正北/东北（水）', area: '相城', apts: '元和、渭塘', advantage: '漕湖+阳澄湖（水）', price: '中等偏低', reason: '水气旺，价格合理' },
+      { tier: 2, tierName: '正北/东北（水）', area: '高新区', apts: '狮山、科技城', advantage: '太湖（大水）+大阳山（木）', price: '中等', reason: '水木兼具，科技区' },
+      { tier: 3, tierName: '西南（大水+土）', area: '吴中太湖', apts: '太湖新城', advantage: '太湖（大水）', price: '中等', reason: '大水补印但土气混入' }
+    ]
+  },
+  '天津': {
+    center: '滨江道',
+    directions: [
+      { name: '正东', areas: '东丽、滨海新区', el: 'wood', extra: '木+大水', geo: '海河（水）+渤海（大水）+东方木' },
+      { name: '东北', areas: '宁河', el: 'earth', extra: '土', geo: '平原' },
+      { name: '正北', areas: '武清、宝坻', el: 'water', extra: '水', geo: '北运河+潮白河' },
+      { name: '正南', areas: '静海', el: 'fire', extra: '火', geo: '向阳火地' },
+      { name: '西南', areas: '西青南', el: 'earth', extra: '土', geo: '地势微高' },
+      { name: '正西', areas: '西青', el: 'metal', extra: '金', geo: '西部金气' },
+      { name: '西北', areas: '北辰北', el: 'metal', extra: '金+土', geo: '地势偏高' },
+      { name: '东南', areas: '津南', el: 'wood', extra: '木+大水', geo: '海河+渤海（大水）' }
+    ],
+    neighborhoods: [
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '滨海新区', apts: '中新生态城、塘沽、开发区', advantage: '渤海（大水）+海河+东方木', price: '洼地', reason: '大水+木气，价格低' },
+      { tier: 1, tierName: '正东/东南（木+大水）', area: '东丽', apts: '东丽湖、华明', advantage: '东丽湖（水）+海河+东方木', price: '中等偏低', reason: '木水补益，近市区' },
+      { tier: 2, tierName: '正北（水）', area: '武清', apts: '武清各小区', advantage: '北运河+潮白河（水）', price: '洼地', reason: '水气旺，京津城际' },
+      { tier: 2, tierName: '正北（水）', area: '宝坻', apts: '宝坻各小区', advantage: '潮白河+蓟运河（水）', price: '洼地', reason: '双河交汇，水气最旺' },
+      { tier: 3, tierName: '正西（金）', area: '西青', apts: '杨柳青、中北镇', advantage: '运河（水）', price: '中等偏低', reason: '水气有但金气重' }
+    ]
   }
-  const monthSel = document.getElementById('month');
-  for (let m = 1; m <= 12; m++) {
-    monthSel.appendChild(new Option(m + '月', m));
-  }
-  const daySel = document.getElementById('day');
-  for (let d = 1; d <= 31; d++) {
-    daySel.appendChild(new Option(d + '日', d));
-  }
-  const hourSel = document.getElementById('hour');
-  hourSel.appendChild(new Option('未知', -1));
-  hourBranches.forEach((h, i) => {
-    hourSel.appendChild(new Option(h.name, i));
-  });
+};
+
+// Generic city fallback
+function getGenericDirections() {
+  return [
+    { name: '正东', areas: '城市东部区域', el: 'wood', extra: '木', geo: '日出方向，木气生发' },
+    { name: '东北', areas: '城市东北区域', el: 'earth', extra: '土/水木过渡', geo: '山止与始之地' },
+    { name: '正北', areas: '城市北部区域', el: 'water', extra: '水', geo: '阴气盛，寒水之地' },
+    { name: '正南', areas: '城市南部区域', el: 'fire', extra: '火', geo: '阳气盛，向阳之地' },
+    { name: '西南', areas: '城市西南区域', el: 'earth', extra: '土', geo: '大地承载之地' },
+    { name: '正西', areas: '城市西部区域', el: 'metal', extra: '金', geo: '日落方向，收敛之气' },
+    { name: '西北', areas: '城市西北区域', el: 'metal', extra: '金+土', geo: '天门之地，刚健' },
+    { name: '东南', areas: '城市东南区域', el: 'wood', extra: '木', geo: '风地，木气流动' }
+  ];
 }
-initForm();
 
 // ===== Bazi Calculation =====
-function getStemEl(stemIdx) {
-  return stemElements[Math.floor(stemIdx / 2)];
-}
-function getBranchEl(branchIdx) {
-  return branchElMap[branchIdx];
-}
+const monthBoundaries = [
+  { branch: 2, start: [2,4] }, { branch: 3, start: [3,6] }, { branch: 4, start: [4,5] },
+  { branch: 5, start: [5,6] }, { branch: 6, start: [6,6] }, { branch: 7, start: [7,7] },
+  { branch: 8, start: [8,8] }, { branch: 9, start: [9,8] }, { branch: 10, start: [10,8] },
+  { branch: 11, start: [11,7] }, { branch: 0, start: [12,8] }, { branch: 1, start: [1,6] }
+];
+const hourBranches = [
+  { branch: 0, name: '子时 23:00-01:00' }, { branch: 1, name: '丑时 01:00-03:00' },
+  { branch: 2, name: '寅时 03:00-05:00' }, { branch: 3, name: '卯时 05:00-07:00' },
+  { branch: 4, name: '辰时 07:00-09:00' }, { branch: 5, name: '巳时 09:00-11:00' },
+  { branch: 6, name: '午时 11:00-13:00' }, { branch: 7, name: '未时 13:00-15:00' },
+  { branch: 8, name: '申时 15:00-17:00' }, { branch: 9, name: '酉时 17:00-19:00' },
+  { branch: 10, name: '戌时 19:00-21:00' }, { branch: 11, name: '亥时 21:00-23:00' }
+];
 
-function getYearPillar(year) {
-  const idx = ((year - 4) % 60 + 60) % 60;
-  return { stem: idx % 10, branch: idx % 12, idx: idx };
-}
-
+function getStemEl(idx) { return stemElements[Math.floor(idx / 2)]; }
+function getBranchEl(idx) { return branchElMap[idx]; }
+function getYearPillar(year) { const idx = ((year - 4) % 60 + 60) % 60; return { stem: idx % 10, branch: idx % 12, idx }; }
 function getMonthBranch(month, day) {
   for (let i = monthBoundaries.length - 1; i >= 0; i--) {
-    const mb = monthBoundaries[i];
-    const [m, d] = mb.start;
-    if (month > m || (month === m && day >= d)) {
-      return mb.branch;
-    }
+    const [m, d] = monthBoundaries[i].start;
+    if (month > m || (month === m && day >= d)) return monthBoundaries[i].branch;
   }
-  // Before Jan 6 → still 丑月 of previous year, but for simplicity return 丑
   return 1;
 }
-
 function getMonthStem(yearStem, monthBranchIdx) {
-  // 五虎遁: determine first month (寅月) stem based on year stem
-  const yearStemEl = getStemEl(yearStem);
-  let firstMonthStem;
-  if (yearStem % 5 === 0 || yearStem % 5 === 5 % 5) {
-    // 甲己年 → 丙寅起
-    firstMonthStem = 2; // 丙
-  }
-  // Better: use formula
-  const lookup = [2, 4, 6, 8, 0]; // 甲己→丙(2), 乙庚→戊(4), 丙辛→庚(6), 丁壬→壬(8), 戊癸→甲(0)
-  firstMonthStem = lookup[yearStem % 5];
-  // monthBranchIdx: 寅=2, 卯=3, ... 丑=1
-  // offset from 寅
-  const offset = (monthBranchIdx - 2 + 12) % 12;
-  return (firstMonthStem + offset) % 10;
+  const lookup = [2, 4, 6, 8, 0];
+  return (lookup[yearStem % 5] + (monthBranchIdx - 2 + 12) % 12) % 10;
 }
-
 function getDayPillar(year, month, day) {
-  // Reference: 1900-01-01 = 甲戌日 (index 10 in 60-cycle, 0=甲子)
   const refDate = Date.UTC(1900, 0, 1);
   const targetDate = Date.UTC(year, month - 1, day);
   const daysDiff = Math.floor((targetDate - refDate) / 86400000);
   const dayIdx = ((daysDiff + 10) % 60 + 60) % 60;
   return { stem: dayIdx % 10, branch: dayIdx % 12, idx: dayIdx };
 }
-
 function getHourPillar(dayStem, hourBranchIdx) {
   if (hourBranchIdx < 0) return null;
-  // 五鼠遁: determine 子时 stem based on day stem
-  const lookup = [0, 2, 4, 6, 8]; // 甲己→甲(0), 乙庚→丙(2), 丙辛→戊(4), 丁壬→庚(6), 戊癸→壬(8)
-  const firstHourStem = lookup[dayStem % 5];
-  return { stem: (firstHourStem + hourBranchIdx) % 10, branch: hourBranchIdx };
+  const lookup = [0, 2, 4, 6, 8];
+  return { stem: (lookup[dayStem % 5] + hourBranchIdx) % 10, branch: hourBranchIdx };
 }
-
 function countElements(pillars) {
-  const counts = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
-  pillars.forEach(p => {
-    if (!p) return;
-    counts[getStemEl(p.stem)]++;
-    counts[getBranchEl(p.branch)]++;
-  });
-  return counts;
+  const c = { wood:0, fire:0, earth:0, metal:0, water:0 };
+  pillars.forEach(p => { if (p) { c[getStemEl(p.stem)]++; c[getBranchEl(p.branch)]++; } });
+  return c;
 }
-
 function analyzeDayMaster(dayStem, counts, monthBranchIdx) {
   const dayEl = getStemEl(dayStem);
-  // Check if day master is supported by month (得令)
   const monthEl = getBranchEl(monthBranchIdx);
   const supportedByMonth = (dayEl === monthEl) || (elGen[monthEl] === dayEl);
-
-  // Count supporting elements (same + generating)
   const genEl = Object.keys(elGen).find(k => elGen[k] === dayEl);
   const support = counts[dayEl] + counts[genEl];
   const against = counts[elGen[dayEl]] + counts[elRes[dayEl]];
-
-  // Simple strength estimation
   let strength;
   if (supportedByMonth && support >= against + 2) strength = '旺';
   else if (supportedByMonth && support >= against) strength = '偏旺';
@@ -751,269 +730,686 @@ function analyzeDayMaster(dayStem, counts, monthBranchIdx) {
   else if (!supportedByMonth && support <= against - 2) strength = '弱';
   else if (!supportedByMonth && support <= against - 1) strength = '偏弱';
   else strength = '中和';
-
   return { dayEl, strength, supportedByMonth, support, against, genEl };
 }
-
 function getFavorAvoid(dayEl, strength) {
   const isStrong = strength === '旺' || strength === '偏旺';
   const isWeak = strength === '弱' || strength === '偏弱';
-
+  const genOf = Object.keys(elGen).find(k => elGen[k] === dayEl);
   let favorable, unfavorable;
   if (isWeak) {
-    // 身弱: 喜印(生我)和比劫(同类)
-    favorable = [elGen[dayEl] ? Object.keys(elGen).find(k => elGen[k] === dayEl) : null, dayEl];
-    unfavorable = [elGen[dayEl], elRes[dayEl]]; // 食伤泄 + 财耗
+    favorable = [genOf, dayEl];
+    unfavorable = [elGen[dayEl], elRes[dayEl]];
   } else if (isStrong) {
-    // 身旺: 喜克泄耗
-    favorable = [elGen[dayEl], elRes[dayEl]]; // 食伤泄 + 财耗
-    unfavorable = [Object.keys(elGen).find(k => elGen[k] === dayEl), dayEl]; // 印生 + 比劫助
+    favorable = [elGen[dayEl], elRes[dayEl]];
+    unfavorable = [genOf, dayEl];
   } else {
-    // 中和: 都可以，略偏
-    favorable = [dayEl, elGen[dayEl] ? Object.keys(elGen).find(k => elGen[k] === dayEl) : null];
+    favorable = [dayEl, genOf];
     unfavorable = [elGen[dayEl], elRes[dayEl]];
   }
-  return { favorable: favorable.filter(Boolean), unfavorable: unfavorable.filter(Boolean) };
+  return { favorable: [...new Set(favorable.filter(Boolean))], unfavorable: [...new Set(unfavorable.filter(Boolean))] };
 }
 
-function calculateBazi() {
+// Floor element
+function getFloorElement(floor) {
+  const d = ((floor % 10) + 10) % 10;
+  if (d === 1 || d === 6) return 'water';
+  if (d === 2 || d === 7) return 'fire';
+  if (d === 3 || d === 8) return 'wood';
+  if (d === 4 || d === 9) return 'metal';
+  return 'earth';
+}
+
+// Direction rating
+function rateDirection(dirEl, dirExtra, favorAvoid) {
+  const favSet = new Set(favorAvoid.favorable);
+  const avoidSet = new Set(favorAvoid.unfavorable);
+  // Check if direction element is favorable or generates favorable
+  const isFav = favSet.has(dirEl);
+  const genFav = favorAvoid.favorable.some(f => elGen[dirEl] === f);
+  const isAvoid = avoidSet.has(dirEl);
+  const genAvoid = favorAvoid.unfavorable.some(u => elGen[dirEl] === u);
+  const resAvoid = favorAvoid.unfavorable.some(u => elRes[dirEl] === u); // dir克忌神=吉
+
+  if (isFav) return { rating: '大吉', cls: 'great' };
+  if (genFav || resAvoid) return { rating: '吉', cls: 'good' };
+  if (isAvoid && genAvoid) return { rating: '大凶', cls: 'terrible' };
+  if (isAvoid) return { rating: '凶', cls: 'bad' };
+  return { rating: '平', cls: 'neutral' };
+}
+
+// Cost-effectiveness
+function rateCostEffectiveness(rating, price) {
+  if (rating === '大吉' && (price.includes('洼地') || price.includes('最低'))) return '最高';
+  if (rating === '大吉' && price.includes('偏低')) return '极高';
+  if ((rating === '大吉' || rating === '吉') && (price.includes('洼地') || price.includes('偏低'))) return '高';
+  if ((rating === '大吉' || rating === '吉' || rating === '平') && price.includes('中等')) return '中等';
+  if (rating === '平') return '一般';
+  if (rating === '凶' || rating === '大凶') return '低';
+  return '中等';
+}
+
+// Year analysis
+function getYearGanzhi(year) {
+  const idx = ((year - 4) % 60 + 60) % 60;
+  return { stem: idx % 10, branch: idx % 12 };
+}
+function judgeYear(year, favorAvoid) {
+  const gz = getYearGanzhi(year);
+  const stemEl = getStemEl(gz.stem);
+  const branchEl = getBranchEl(gz.branch);
+  const stemStr = stems[gz.stem] + branches[gz.branch];
+  const isFav = favorAvoid.favorable.includes(stemEl) || favorAvoid.favorable.includes(branchEl);
+  const isAvoid = favorAvoid.unfavorable.includes(stemEl) || favorAvoid.unfavorable.includes(branchEl);
+  let level, advice;
+  if (isFav && !isAvoid) { level = '吉'; advice = '宜行动、搬迁、购房'; }
+  else if (isAvoid && !isFav) { level = '凶'; advice = '不宜大额支出，守成为上'; }
+  else if (isFav && isAvoid) { level = '混杂'; advice = '吉凶参半，谨慎行事'; }
+  else { level = '平'; advice = '视实际情况决定'; }
+  const elStr = elNames[stemEl] + '+' + elNames[branchEl];
+  return { year, ganzhi: stemStr, element: elStr, level, advice };
+}
+
+// ===== Init Form =====
+function initForm() {
+  const yearSel = document.getElementById('year');
+  for (let y = 1940; y <= 2026; y++) {
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y + '年';
+    if (y === 1995) opt.selected = true;
+    yearSel.appendChild(opt);
+  }
+  const monthSel = document.getElementById('month');
+  for (let m = 1; m <= 12; m++) monthSel.appendChild(new Option(m + '月', m));
+  const daySel = document.getElementById('day');
+  for (let d = 1; d <= 31; d++) daySel.appendChild(new Option(d + '日', d));
+  const hourSel = document.getElementById('hour');
+  hourSel.appendChild(new Option('未知', -1));
+  hourBranches.forEach((h, i) => hourSel.appendChild(new Option(h.name, i)));
+}
+initForm();
+
+// ===== Report Generation =====
+function generateReport() {
   const year = parseInt(document.getElementById('year').value);
   const month = parseInt(document.getElementById('month').value);
   const day = parseInt(document.getElementById('day').value);
   const hourIdx = parseInt(document.getElementById('hour').value);
-  const gender = document.getElementById('gender').value;
+  const city = document.getElementById('city').value;
+  const residence = document.getElementById('residence').value.trim();
+  const floor = parseInt(document.getElementById('floor').value);
+  const district = document.getElementById('district').value.trim();
+  const company = document.getElementById('company').value.trim();
+  const companyFloor = parseInt(document.getElementById('companyFloor').value);
+  const companyDistrict = document.getElementById('companyDistrict').value.trim();
+  const manageMode = document.getElementById('manageMode').value;
+  const finance = document.getElementById('finance').value;
+  const notes = document.getElementById('notes').value.trim();
 
+  // Calculate bazi
   const yearP = getYearPillar(year);
   const monthBranchIdx = getMonthBranch(month, day);
   const monthStemIdx = getMonthStem(yearP.stem, monthBranchIdx);
   const monthP = { stem: monthStemIdx, branch: monthBranchIdx };
   const dayP = getDayPillar(year, month, day);
   const hourP = getHourPillar(dayP.stem, hourIdx);
-
-  const pillars = [yearP, monthP, dayP, hourP].filter(p => p !== null);
   const allPillars = [yearP, monthP, dayP, hourP];
   const counts = countElements(allPillars);
   const analysis = analyzeDayMaster(dayP.stem, counts, monthBranchIdx);
-  const favorAvoid = getFavorAvoid(analysis.dayEl, analysis.strength);
+  const fa = getFavorAvoid(analysis.dayEl, analysis.strength);
 
-  renderResults(yearP, monthP, dayP, hourP, counts, analysis, favorAvoid);
-  renderCompass(favorAvoid);
-}
+  // Get city data
+  const cd = cityData[city] || { directions: getGenericDirections(), neighborhoods: [] };
 
-function renderResults(yearP, monthP, dayP, hourP, counts, analysis, favorAvoid) {
-  const pillarLabels = ['年柱', '月柱', '日柱', '时柱'];
-  const pillarData = [yearP, monthP, dayP, hourP];
-
+  // Build report
   let html = '<div class="fade-in">';
 
-  // Pillar grid
+  // 1. Bazi Analysis
+  html += buildBaziSection(yearP, monthP, dayP, hourP, counts, analysis, fa);
+
+  // 2. Direction Analysis Table
+  html += buildDirectionTable(cd, fa, city);
+
+  // 3. Tiered Recommendations
+  html += buildRecommendations(cd, fa, finance);
+
+  // 4. Residence Optimization
+  if (residence || floor || district) {
+    html += buildResidenceOptimization(residence, floor, district, fa, analysis);
+  }
+
+  // 5. Company Optimization
+  if (company || companyFloor || companyDistrict) {
+    html += buildCompanyOptimization(company, companyFloor, companyDistrict, fa, manageMode);
+  }
+
+  // 6. Relocation Priority
+  html += buildRelocationPlan(fa, finance, city, cd, manageMode, notes);
+
+  // 7. One-sentence Summary
+  html += buildSummary(fa, analysis, city, cd, residence, company, finance, manageMode);
+
+  html += '</div>';
+
+  document.getElementById('placeholderSection').style.display = 'none';
+  const reportSec = document.getElementById('reportSection');
+  reportSec.style.display = 'block';
+  document.getElementById('reportContent').innerHTML = html;
+  reportSec.scrollIntoView({ behavior: 'smooth' });
+}
+
+function buildBaziSection(yearP, monthP, dayP, hourP, counts, analysis, fa) {
+  const pillarLabels = ['年柱','月柱','日柱','时柱'];
+  const pillarData = [yearP, monthP, dayP, hourP];
+  let html = '<div class="result-box"><h3><span class="icon">☰</span> 一、八字喜忌分析</h3>';
+
+  // Pillars
   html += '<div class="pillar-grid">';
   pillarData.forEach((p, i) => {
     if (!p) {
-      html += `<div class="pillar"><div class="pillar-label">${pillarLabels[i]}</div><div style="color:var(--text-dim);font-size:14px;padding:20px 0;">未知</div></div>`;
+      html += `<div class="pillar"><div class="pillar-label">${pillarLabels[i]}</div><div style="color:var(--text-dim);font-size:14px;padding:16px 0;">未知</div></div>`;
       return;
     }
-    const stemEl = getStemEl(p.stem);
-    const branchEl = getBranchEl(p.branch);
+    const sEl = getStemEl(p.stem), bEl = getBranchEl(p.branch);
     html += `<div class="pillar">
       <div class="pillar-label">${pillarLabels[i]}</div>
-      <div class="pillar-stem" style="color:${elColors[stemEl]}">${stems[p.stem]}</div>
-      <div class="pillar-branch" style="color:${elColors[branchEl]}">${branches[p.branch]}</div>
-      <div class="pillar-element">${elNames[stemEl]} · ${elNames[branchEl]}</div>
+      <div class="pillar-stem" style="color:${elColors[sEl]}">${stems[p.stem]}</div>
+      <div class="pillar-branch" style="color:${elColors[bEl]}">${branches[p.branch]}</div>
+      <div class="pillar-element">${elNames[sEl]} · ${elNames[bEl]}</div>
     </div>`;
   });
   html += '</div>';
 
-  // Day master summary
-  html += `<div class="result-section">
-    <h4>日主分析</h4>
-    <div class="result-summary">
-      日主 <strong style="color:${elColors[analysis.dayEl]}">${stems[dayP.stem]}（${elNames[analysis.dayEl]}）</strong>
-      · 身<strong>${analysis.strength}</strong>
-      · ${analysis.supportedByMonth ? '得令' : '失令'}
-      · 扶助 ${analysis.support} vs 消耗 ${analysis.against}
-    </div>
+  // Day master
+  html += `<div style="padding:12px 16px;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--border);font-size:14px;margin-bottom:16px;">
+    日主 <strong style="color:${elColors[analysis.dayEl]}">${stems[dayP.stem]}（${elNames[analysis.dayEl]}）</strong>
+    · 身<strong>${analysis.strength}</strong>
+    · ${analysis.supportedByMonth ? '得令' : '失令'}
+    · 扶助 ${analysis.support} vs 消耗 ${analysis.against}
   </div>`;
 
-  // Five elements balance bar
-  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-  html += '<div class="result-section"><h4>五行分布</h4>';
+  // Elements bar
+  const total = Object.values(counts).reduce((a,b) => a+b, 0) || 1;
+  html += '<div style="margin-bottom:16px;"><div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">五行分布</div>';
   html += '<div class="elements-bar">';
   ['wood','fire','earth','metal','water'].forEach(el => {
-    const pct = (counts[el] / total * 100);
     if (counts[el] > 0) {
-      html += `<div style="width:${pct}%;background:${elColors[el]};color:#0d1117;">${counts[el]}</div>`;
+      html += `<div style="width:${counts[el]/total*100}%;background:${elColors[el]};color:#0d1117;">${counts[el]}</div>`;
     }
   });
-  html += '</div>';
-  html += '<div class="el-legend">';
-  html += '<span class="l-wood">木 ' + counts.wood + '</span>';
-  html += '<span class="l-fire">火 ' + counts.fire + '</span>';
-  html += '<span class="l-earth">土 ' + counts.earth + '</span>';
-  html += '<span class="l-metal">金 ' + counts.metal + '</span>';
-  html += '<span class="l-water">水 ' + counts.water + '</span>';
+  html += '</div><div class="el-legend">';
+  ['wood','fire','earth','metal','water'].forEach(el => {
+    html += `<span class="l-${el}">${elNames[el]} ${counts[el]}</span>`;
+  });
   html += '</div></div>';
 
   // Favor / Avoid
-  html += '<div class="result-section"><h4>喜用神</h4><div class="favor-box">';
-  favorAvoid.favorable.forEach(el => {
-    html += `<span class="el-badge ${el}">${elNames[el]}</span>`;
-  });
+  html += '<div style="display:flex;gap:20px;flex-wrap:wrap;">';
+  html += '<div><div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">喜用神（补益日主）</div><div style="display:flex;gap:8px;flex-wrap:wrap;">';
+  fa.favorable.forEach(el => html += `<span class="el-badge ${el}" style="font-size:14px;padding:4px 12px;">${elNames[el]}</span>`);
   html += '</div></div>';
+  html += '<div><div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">忌神（消耗日主）</div><div style="display:flex;gap:8px;flex-wrap:wrap;">';
+  fa.unfavorable.forEach(el => html += `<span class="el-badge ${el}" style="font-size:14px;padding:4px 12px;">${elNames[el]}</span>`);
+  html += '</div></div></div>';
 
-  html += '<div class="result-section"><h4>忌神</h4><div class="avoid-box">';
-  favorAvoid.unfavorable.forEach(el => {
-    html += `<span class="el-badge ${el}">${elNames[el]}</span>`;
-  });
-  html += '</div></div>';
+  // Color/plant tips
+  const favEl = fa.favorable[0];
+  html += `<div style="margin-top:16px;padding:12px 16px;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--border);font-size:13px;">
+    <strong>补益方向：</strong>多用 <span class="el-badge ${favEl}">${elColorNames[favEl]}</span> 色调 ·
+    ${elPlantInfo[favEl].type}（${elPlantInfo[favEl].examples}）·
+    数量 ${elPlantInfo[favEl].count}
+  </div>`;
 
-  // Direction summary
-  html += '<div class="result-section"><h4>方位吉凶速览</h4>';
-  html += '<div class="dir-result-grid">';
-  directions.forEach(d => {
-    let rating, ratingClass;
-    if (favorAvoid.favorable.includes(d.el)) {
-      rating = '大吉'; ratingClass = 'great';
-    } else if (favorAvoid.favorable.some(fe => elGen[fe] === d.el)) {
-      rating = '吉'; ratingClass = 'good';
-    } else if (favorAvoid.unfavorable.includes(d.el)) {
-      rating = '凶'; ratingClass = 'bad';
-    } else if (favorAvoid.unfavorable.some(ue => elGen[ue] === d.el)) {
-      rating = '大凶'; ratingClass = 'terrible';
-    } else {
-      rating = '平'; ratingClass = 'neutral';
-    }
-    html += `<div class="dir-result-item">
-      <span class="dir-name">${d.name}</span>
-      <span class="el-badge ${d.el}" style="margin-right:auto;margin-left:8px;">${elNames[d.el]}</span>
-      <span class="dir-rating ${ratingClass}">${rating}</span>
-    </div>`;
+  html += '</div>';
+  return html;
+}
+
+function buildDirectionTable(cd, fa, city) {
+  let html = `<div class="result-box"><h3><span class="icon">🧭</span> 二、${city}方位吉凶判断</h3>`;
+  html += `<p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">以${cd.center || '城市中心'}为原点，结合自然地理修正五行，对照喜忌评级</p>`;
+  html += '<table><thead><tr><th>方位</th><th>板块范围</th><th>五行</th><th>地理依据</th><th>吉凶</th></tr></thead><tbody>';
+  cd.directions.forEach(d => {
+    const r = rateDirection(d.el, d.extra, fa);
+    html += `<tr>
+      <td style="font-weight:600;">${d.name}</td>
+      <td>${d.areas}</td>
+      <td><span class="el-badge ${d.el}">${elNames[d.el]}</span> <span style="font-size:12px;color:var(--text-dim);">${d.extra}</span></td>
+      <td style="font-size:12px;color:var(--text-muted);">${d.geo}</td>
+      <td><span class="rating ${r.cls}">${r.rating}</span></td>
+    </tr>`;
   });
+  html += '</tbody></table>';
+
+  // Compass
+  html += '<div style="margin-top:24px;">';
+  html += renderCompassSVG(fa);
+  html += '</div>';
+
+  // Great/Bad directions summary
+  html += '<div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">';
+  html += '<div style="padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);">';
+  html += '<div style="font-size:13px;color:var(--wood);margin-bottom:8px;">✅ 大吉方位（用神方）</div>';
+  let greatList = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'great');
+  if (greatList.length === 0) greatList = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'good');
+  html += '<div style="font-size:13px;">' + (greatList.length > 0 ? greatList.map(d => `${d.name}（${d.extra}）`).join('、') : '暂无') + '</div>';
+  html += '</div>';
+  html += '<div style="padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);">';
+  html += '<div style="font-size:13px;color:var(--fire);margin-bottom:8px;">❌ 大凶方位（忌神方）</div>';
+  let badList = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'terrible');
+  if (badList.length === 0) badList = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'bad');
+  html += '<div style="font-size:13px;">' + (badList.length > 0 ? badList.map(d => `${d.name}（${d.extra}）`).join('、') : '暂无') + '</div>';
   html += '</div></div>';
 
   html += '</div>';
-  document.getElementById('results').innerHTML = html;
+  return html;
 }
 
-// ===== Compass Rendering =====
-function renderCompass(favorAvoid) {
-  const svg = document.getElementById('compass');
-  const cx = 200, cy = 200;
-  const outerR = 180, innerR = 110, centerR = 50;
-
-  let html = '';
-
-  // Background circles
-  html += `<circle cx="${cx}" cy="${cy}" r="${outerR}" fill="#161b22" stroke="#30363d" stroke-width="1"/>`;
-  html += `<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="#0d1117" stroke="#30363d" stroke-width="0.5"/>`;
-  html += `<circle cx="${cx}" cy="${cy}" r="${centerR}" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>`;
-
-  // Direction sectors
-  directions.forEach(d => {
-    const angle = d.angle - 90; // SVG: 0 = right, we want 0 = top (north)
-    const startAngle = (angle - 22.5) * Math.PI / 180;
-    const endAngle = (angle + 22.5) * Math.PI / 180;
-
-    const x1 = cx + outerR * Math.cos(startAngle);
-    const y1 = cy + outerR * Math.sin(startAngle);
-    const x2 = cx + outerR * Math.cos(endAngle);
-    const y2 = cy + outerR * Math.sin(endAngle);
-
-    const x3 = cx + innerR * Math.cos(endAngle);
-    const y3 = cy + innerR * Math.sin(endAngle);
-    const x4 = cx + innerR * Math.cos(startAngle);
-    const y4 = cy + innerR * Math.sin(startAngle);
-
-    let fillColor = elColors[d.el] + '20'; // 12.5% opacity
-    let strokeColor = elColors[d.el] + '60';
-    let strokeWidth = '0.5';
-
-    // Highlight based on favor/avoid
-    if (favorAvoid.favorable.includes(d.el)) {
-      fillColor = elColors[d.el] + '40';
-      strokeColor = elColors[d.el];
-      strokeWidth = '1.5';
-    } else if (favorAvoid.unfavorable.includes(d.el)) {
-      fillColor = '#f8514915';
-      strokeColor = '#f8514960';
-      strokeWidth = '1';
-    }
-
-    html += `<path d="M ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${strokeWidth}"/>`;
-
-    // Direction label
-    const labelR = (outerR + innerR) / 2;
-    const lx = cx + labelR * Math.cos(angle * Math.PI / 180);
-    const ly = cy + labelR * Math.sin(angle * Math.PI / 180);
-
-    html += `<text x="${lx}" y="${ly - 6}" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="${elColors[d.el]}" font-family="sans-serif">${d.name}</text>`;
-    html += `<text x="${lx}" y="${ly + 10}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#8b949e" font-family="sans-serif">${elNames[d.el]}</text>`;
+function renderCompassSVG(fa) {
+  const cx = 200, cy = 200, outerR = 170, innerR = 105, centerR = 45;
+  const dirData = [
+    { name: '正北', el: 'water', angle: 0 }, { name: '东北', el: 'earth', angle: 45 },
+    { name: '正东', el: 'wood', angle: 90 }, { name: '东南', el: 'wood', angle: 135 },
+    { name: '正南', el: 'fire', angle: 180 }, { name: '西南', el: 'earth', angle: 225 },
+    { name: '正西', el: 'metal', angle: 270 }, { name: '西北', el: 'metal', angle: 315 }
+  ];
+  let svg = `<div style="display:flex;justify-content:center;"><svg width="380" height="380" viewBox="0 0 400 400">`;
+  svg += `<circle cx="${cx}" cy="${cy}" r="${outerR}" fill="#161b22" stroke="#30363d" stroke-width="1"/>`;
+  svg += `<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="#0d1117" stroke="#30363d" stroke-width="0.5"/>`;
+  svg += `<circle cx="${cx}" cy="${cy}" r="${centerR}" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>`;
+  dirData.forEach(d => {
+    const angle = d.angle - 90;
+    const sa = (angle - 22.5) * Math.PI / 180;
+    const ea = (angle + 22.5) * Math.PI / 180;
+    const x1 = cx + outerR * Math.cos(sa), y1 = cy + outerR * Math.sin(sa);
+    const x2 = cx + outerR * Math.cos(ea), y2 = cy + outerR * Math.sin(ea);
+    const x3 = cx + innerR * Math.cos(ea), y3 = cy + innerR * Math.sin(ea);
+    const x4 = cx + innerR * Math.cos(sa), y4 = cy + innerR * Math.sin(sa);
+    let fill = elColors[d.el] + '20', stroke = elColors[d.el] + '60', sw = '0.5';
+    const r = rateDirection(d.el, '', fa);
+    if (r.cls === 'great') { fill = elColors[d.el] + '40'; stroke = elColors[d.el]; sw = '1.5'; }
+    else if (r.cls === 'terrible' || r.cls === 'bad') { fill = '#f8514915'; stroke = '#f8514960'; sw = '1'; }
+    svg += `<path d="M ${x1} ${y1} A ${outerR} ${outerR} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+    const lr = (outerR + innerR) / 2;
+    const lx = cx + lr * Math.cos(angle * Math.PI / 180);
+    const ly = cy + lr * Math.sin(angle * Math.PI / 180);
+    svg += `<text x="${lx}" y="${ly-5}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="${elColors[d.el]}">${d.name}</text>`;
+    svg += `<text x="${lx}" y="${ly+10}" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#8b949e">${elNames[d.el]}</text>`;
   });
-
-  // Direction lines
   for (let i = 0; i < 8; i++) {
     const a = (i * 45 - 90 - 22.5) * Math.PI / 180;
-    const x = cx + outerR * Math.cos(a);
-    const y = cy + outerR * Math.sin(a);
-    const xi = cx + innerR * Math.cos(a);
-    const yi = cy + innerR * Math.sin(a);
-    html += `<line x1="${x}" y1="${y}" x2="${xi}" y2="${yi}" stroke="#30363d" stroke-width="0.5"/>`;
+    svg += `<line x1="${cx+outerR*Math.cos(a)}" y1="${cy+outerR*Math.sin(a)}" x2="${cx+innerR*Math.cos(a)}" y2="${cy+innerR*Math.sin(a)}" stroke="#30363d" stroke-width="0.5"/>`;
   }
-
-  // Center text
-  html += `<text x="${cx}" y="${cy - 8}" text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="600" fill="#e6edf3" font-family="sans-serif">方位</text>`;
-  html += `<text x="${cx}" y="${cy + 10}" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#8b949e" font-family="sans-serif">指南针</text>`;
-
-  // Cardinal labels on outer ring
-  const cardinals = [
-    { label: 'N', angle: -90 },
-    { label: 'E', angle: 0 },
-    { label: 'S', angle: 90 },
-    { label: 'W', angle: 180 }
-  ];
-  cardinals.forEach(c => {
-    const r = outerR + 14;
-    const x = cx + r * Math.cos(c.angle * Math.PI / 180);
-    const y = cy + r * Math.sin(c.angle * Math.PI / 180);
-    html += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#6e7681" font-family="sans-serif">${c.label}</text>`;
-  });
-
-  svg.innerHTML = html;
-
-  // Show info panels
-  const infoEl = document.getElementById('compassInfo');
-  infoEl.style.display = 'grid';
-
-  const greatEl = document.getElementById('greatDirs');
-  const badEl = document.getElementById('badDirs');
-  greatEl.innerHTML = '';
-  badEl.innerHTML = '';
-
-  directions.forEach(d => {
-    if (favorAvoid.favorable.includes(d.el)) {
-      const li = document.createElement('li');
-      li.style.color = elColors[d.el];
-      li.innerHTML = `<span style="background:${elColors[d.el]}"></span>${d.name}（${elNames[d.el]}）`;
-      greatEl.appendChild(li);
-    }
-    if (favorAvoid.unfavorable.includes(d.el)) {
-      const li = document.createElement('li');
-      li.style.color = '#f85149';
-      li.innerHTML = `<span style="background:#f85149"></span>${d.name}（${elNames[d.el]}）`;
-      badEl.appendChild(li);
-    }
-  });
-
-  if (greatEl.children.length === 0) greatEl.innerHTML = '<li style="color:var(--text-dim)">暂无</li>';
-  if (badEl.children.length === 0) badEl.innerHTML = '<li style="color:var(--text-dim)">暂无</li>';
+  svg += `<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="14" font-weight="600" fill="#e6edf3">方位</text>`;
+  svg += `<text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="11" fill="#8b949e">指南针</text>`;
+  svg += '</svg></div>';
+  return svg;
 }
 
-// Initial compass render (empty state)
-renderCompass({ favorable: ['water','wood'], unfavorable: ['fire','earth'] });
-document.getElementById('compassInfo').style.display = 'grid';
+function buildRecommendations(cd, fa, finance) {
+  if (!cd.neighborhoods || cd.neighborhoods.length === 0) {
+    return `<div class="result-box"><h3><span class="icon">🏠</span> 三、高性价比板块推荐</h3>
+      <p style="color:var(--text-muted);font-size:14px;">该城市暂无详细小区数据。请参照方位吉凶表，优先选择大吉/吉方位的板块，结合房价与通勤综合判断。</p></div>`;
+  }
 
-// Set GitHub link
-document.getElementById('ghLink').href = 'https://github.com/iPythoning/bazi-fengshui-skill';
+  let html = '<div class="result-box"><h3><span class="icon">🏠</span> 三、高性价比板块推荐</h3>';
+  if (finance === 'debt' || finance === 'startup') {
+    html += '<p style="font-size:13px;color:var(--earth);margin-bottom:16px;">⚠️ 当前经济状况需守现金流，优先推荐价格洼地/中等偏低板块</p>';
+  }
+
+  // Group by tier
+  const tiers = {};
+  cd.neighborhoods.forEach(n => {
+    if (!tiers[n.tier]) tiers[n.tier] = { name: n.tierName, items: [] };
+    tiers[n.tier].items.push(n);
+  });
+
+  Object.keys(tiers).sort().forEach(tierNum => {
+    const tier = tiers[tierNum];
+    const medals = ['🥇', '🥈', '🥉'];
+    html += `<div class="tier-section"><div class="tier-header">${medals[parseInt(tierNum)-1] || '🔹'} ${tier.name}</div>`;
+    html += '<table><thead><tr><th>板块</th><th>小区举例</th><th>五行优势</th><th>价格</th><th>性价比</th><th>适配理由</th></tr></thead><tbody>';
+    tier.items.forEach(n => {
+      // Rate this neighborhood
+      const dirEl = cd.directions.find(d => d.name && n.advantage.includes(d.name.split('')[0]));
+      const r = rateDirection(
+        cd.directions.find(d => n.advantage.includes(d.name) || n.area.includes(d.areas.split('、')[0]))?.el || 'wood',
+        '', fa
+      );
+      const costRating = rateCostEffectiveness(r.rating, n.price);
+      html += `<tr>
+        <td style="font-weight:600;">${n.area}</td>
+        <td style="font-size:12px;">${n.apts}</td>
+        <td style="font-size:12px;">${n.advantage}</td>
+        <td><span style="font-size:12px;">${n.price}</span></td>
+        <td><span class="rating ${r.cls}">${costRating}</span></td>
+        <td style="font-size:12px;color:var(--text-muted);">${n.reason}</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+  });
+
+  html += '</div>';
+  return html;
+}
+
+function buildResidenceOptimization(residence, floor, district, fa, analysis) {
+  const favEl = fa.favorable[0];
+  const avoidEls = fa.unfavorable;
+  const resName = residence || '当前住址';
+  const floorNum = floor || 0;
+  const floorEl = floorNum > 0 ? getFloorElement(floorNum) : null;
+
+  let html = `<div class="result-box"><h3><span class="icon">🛏️</span> 四、住址风水优化：${resName}${floorNum > 0 ? ' ' + floorNum + '楼' : ''}</h3>`;
+
+  // Problem analysis
+  html += '<div style="margin-bottom:16px;">';
+  if (district) html += `<p style="font-size:13px;margin-bottom:6px;"><strong>区位：</strong>${district}</p>`;
+  if (floorEl) {
+    const isBad = avoidEls.includes(floorEl);
+    const isGood = fa.favorable.includes(floorEl);
+    html += `<p style="font-size:13px;margin-bottom:6px;"><strong>楼层五行：</strong>${floorNum}楼属<span class="el-badge ${floorEl}">${elNames[floorEl]}</span>`;
+    if (isBad) html += ` <span style="color:var(--fire);">→ 忌神层，消耗日主，需化解</span>`;
+    else if (isGood) html += ` <span style="color:var(--wood);">→ 用神层，直接补益，吉</span>`;
+    else html += ` <span style="color:var(--text-muted);">→ 中性，影响不大</span>`;
+    html += '</p>';
+  }
+  html += '</div>';
+
+  // Optimization table
+  html += '<table><thead><tr><th>位置</th><th>做法</th><th>目的</th></tr></thead><tbody>';
+
+  // Floor remedy
+  if (floorEl && avoidEls.includes(floorEl)) {
+    const remedyEl = elRes[floorEl]; // 克楼层五行的元素
+    html += `<tr>
+      <td>门口</td>
+      <td>放${elColorNames[remedyEl].split('、')[0]}色地垫${remedyEl === 'metal' ? ' + 六帝钱' : ''}</td>
+      <td>${elNames[remedyEl]}克${elNames[floorEl]}，化解楼层忌神</td>
+    </tr>`;
+    html += `<tr>
+      <td>门牌号旁</td>
+      <td>贴${elColorNames[remedyEl].split('、')[0]}色门牌套</td>
+      <td>${elNames[remedyEl]}色压制${elNames[floorEl]}气</td>
+    </tr>`;
+    html += `<tr>
+      <td>室内窗帘</td>
+      <td>换${elColorNames[remedyEl]}色窗帘</td>
+      <td>全局压制${elNames[floorEl]}气</td>
+    </tr>`;
+  }
+
+  // Bedroom
+  const bed = bedroomLayout[favEl];
+  html += `<tr>
+    <td>床头方向</td>
+    <td>${bed.bedDir}（${elNames[favEl]}方）</td>
+    <td>睡眠时补${elNames[favEl]}气，补益日主</td>
+  </tr>`;
+  html += `<tr>
+    <td>床头禁忌</td>
+    <td>${bed.avoidDir}</td>
+    <td>忌神方泄耗日主</td>
+  </tr>`;
+  html += `<tr>
+    <td>床单被套</td>
+    <td>${bed.bedColor}配色</td>
+    <td>${elNames[favEl]}色补用神</td>
+  </tr>`;
+  html += `<tr>
+    <td>窗帘颜色</td>
+    <td>${bed.curtainColor}</td>
+    <td>${elNames[favEl]}色补用神</td>
+  </tr>`;
+  if (favEl === 'water' || avoidEls.includes('fire')) {
+    html += `<tr>
+      <td>加湿器</td>
+      <td>24小时常开</td>
+      <td>补水气，化解火燥</td>
+    </tr>`;
+  }
+
+  // Environment remedy (based on district hints)
+  if (district) {
+    if (district.includes('山') || district.includes('岭') || district.includes('岗')) {
+      html += `<tr>
+        <td>阳台/窗台</td>
+        <td>放${elPlantInfo[favEl].type}，${elPlantInfo[favEl].count}</td>
+        <td>${elNames[favEl]}气化解山土之气</td>
+      </tr>`;
+      if (favEl === 'water') {
+        html += `<tr><td>家中北方（坎位）</td><td>放小型圆形鱼缸，养1黑6金</td><td>直接补水制土</td></tr>`;
+      }
+    }
+    if (district.includes('江') || district.includes('河') || district.includes('湖') || district.includes('水')) {
+      html += `<tr><td>环境评价</td><td>水气充沛，天然补益</td><td>${elNames['water']}气旺，对喜水者吉</td></tr>`;
+    }
+  }
+
+  html += '</tbody></table>';
+
+  // Action checklist
+  html += '<div style="margin-top:16px;"><div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px;">行动清单</div>';
+  html += '<ul class="checklist">';
+  html += `<li>床头调整${bed.bedDir}</li>`;
+  if (floorEl && avoidEls.includes(floorEl)) {
+    html += `<li>门口放${elColorNames[elRes[floorEl]].split('、')[0]}色地垫</li>`;
+    html += `<li>窗帘换${elColorNames[elRes[floorEl]].split('、')[0]}色</li>`;
+  }
+  html += `<li>床单被套换${bed.bedColor}配色</li>`;
+  if (favEl === 'water' || avoidEls.includes('fire')) html += '<li>加湿器24小时常开</li>';
+  html += `<li>阳台/窗台添置${elPlantInfo[favEl].type}（${elPlantInfo[favEl].count}）</li>`;
+  html += '</ul></div>';
+
+  html += '</div>';
+  return html;
+}
+
+function buildCompanyOptimization(company, companyFloor, companyDistrict, fa, manageMode) {
+  const favEl = fa.favorable[0];
+  const avoidEls = fa.unfavorable;
+  const compName = company || '公司';
+  const cFloor = companyFloor || 0;
+  const cFloorEl = cFloor > 0 ? getFloorElement(cFloor) : null;
+  const isRemote = manageMode === 'remote';
+
+  let html = `<div class="result-box"><h3><span class="icon">🏢</span> 五、公司风水改造：${compName}${cFloor > 0 ? ' ' + cFloor + '楼' : ''}</h3>`;
+
+  if (isRemote) {
+    html += '<p style="font-size:13px;color:var(--accent);margin-bottom:16px;">📡 远程管理模式：公司风水对您直接影响弱，但对团队有影响，间接影响您的「印」（贵人/团队）。视频背景是远程风水的关键载体。</p>';
+  }
+
+  // Problem analysis
+  if (cFloorEl) {
+    const isBad = avoidEls.includes(cFloorEl);
+    html += `<p style="font-size:13px;margin-bottom:16px;"><strong>楼层五行：</strong>${cFloor}楼属<span class="el-badge ${cFloorEl}">${elNames[cFloorEl]}</span>`;
+    if (isBad) html += ` <span style="color:var(--fire);">→ 忌神层，需内部改造化解</span>`;
+    html += '</p>';
+  }
+
+  // Optimization table
+  html += '<table><thead><tr><th>位置</th><th>做法</th><th>目的</th></tr></thead><tbody>';
+
+  html += `<tr>
+    <td>公司大门/前台</td>
+    <td>放${elColorNames[favEl].split('、')[0]}色台面或背景墙，Logo用${elColorNames[favEl].split('、')[0]}/${elColorNames[fa.favorable[1] || favEl].split('、')[0]}配色</td>
+    <td>进门先见${elNames[favEl]}气，压制忌神</td>
+  </tr>`;
+
+  if (isRemote) {
+    html += `<tr>
+      <td>老板位（远程工位）</td>
+      <td>视频背景必须是${elNames[favEl] === '木' ? '森林' : elNames[favEl] === '水' ? '水景/湖泊/河流' : elColorNames[favEl] + '色调'}${fa.favorable.length > 1 ? '+' + (fa.favorable[1] === 'wood' ? '森林' : fa.favorable[1] === 'water' ? '水景' : elColorNames[fa.favorable[1]]) : ''}（虚拟背景或实景墙）</td>
+      <td>人不在，视频形象是「远程风水」</td>
+    </tr>`;
+  } else {
+    html += `<tr>
+      <td>老板位</td>
+      <td>朝${bedroomLayout[favEl].bedDir.replace('朝','')}，背景用${elColorNames[favEl].split('、')[0]}色调</td>
+      <td>${elNames[favEl]}气补益决策力</td>
+    </tr>`;
+  }
+
+  html += `<tr>
+    <td>财务位（西北/北方）</td>
+    <td>放${elColorNames[favEl].split('、')[0]}色保险柜 + ${elPlantInfo[favEl].type.replace('植物','').trim() || '绿植'}</td>
+    <td>${elNames[favEl]}气生财、化忌</td>
+  </tr>`;
+
+  html += `<tr>
+    <td>会议室</td>
+    <td>墙面${elColorNames[favEl].split('、')[0]}色，忌${avoidEls.map(e => elColorNames[e].split('、')[0]).join('/')}；桌上放${elPlantInfo[favEl].type}</td>
+    <td>压制忌神，防止团队决策冲动</td>
+  </tr>`;
+
+  const plantType = favEl === 'water' ? '水培植物' : favEl === 'earth' ? '土培植物' : elPlantInfo[favEl].type;
+  const avoidPlantType = avoidEls.includes('earth') ? '土培/陶瓷盆栽' : avoidEls.includes('water') ? '水培过多' : '忌神五行植物';
+  html += `<tr>
+    <td>整个${cFloor > 0 ? cFloor + '楼' : '办公区'}</td>
+    <td>多放${plantType}（${elPlantInfo[favEl].examples.split('、')[0]}等），少放${avoidPlantType}</td>
+    <td>${elPlantInfo[favEl].type}=${elNames[favEl]}生用神，${avoidPlantType}=增忌神</td>
+  </tr>`;
+
+  // Light
+  if (avoidEls.includes('fire')) {
+    html += `<tr><td>灯光</td><td>白光/冷光为主，避免暖黄射灯</td><td>避免增火气</td></tr>`;
+  }
+
+  html += '</tbody></table>';
+
+  // Long-term suggestion
+  html += `<p style="margin-top:16px;font-size:13px;color:var(--text-muted);">长期建议：如果公司发展顺利，可考虑将办公地迁至${elNames[favEl] === '木' || elNames[favEl] === '水' ? '喜用神方位（水木旺地）' : '喜用神方位'}，但需结合流年判断时机。</p>`;
+
+  html += '</div>';
+  return html;
+}
+
+function buildRelocationPlan(fa, finance, city, cd, manageMode, notes) {
+  const currentYear = new Date().getFullYear();
+  const favEl = fa.favorable[0];
+  const isDebt = finance === 'debt';
+  const isStartup = finance === 'startup';
+  const isRemote = manageMode === 'remote';
+
+  let html = '<div class="result-box"><h3><span class="icon">📋</span> 六、搬迁优先级规划</h3>';
+
+  // Year analysis
+  html += '<div style="margin-bottom:20px;"><div style="font-size:13px;font-weight:600;margin-bottom:10px;">流年注意事项</div>';
+  html += '<table><thead><tr><th>年份</th><th>干支</th><th>五行</th><th>吉凶</th><th>宜忌</th></tr></thead><tbody>';
+  for (let y = currentYear; y <= currentYear + 4; y++) {
+    const yj = judgeYear(y, fa);
+    const cls = yj.level === '吉' ? 'great' : yj.level === '凶' ? 'terrible' : yj.level === '混杂' ? 'bad' : 'neutral';
+    html += `<tr>
+      <td style="font-weight:600;">${yj.year}</td>
+      <td>${yj.ganzhi}</td>
+      <td>${yj.element}</td>
+      <td><span class="rating ${cls}">${yj.level}</span></td>
+      <td style="font-size:12px;color:var(--text-muted);">${yj.advice}</td>
+    </tr>`;
+  }
+  html += '</tbody></table></div>';
+
+  // Priority table
+  html += '<table><thead><tr><th>优先级</th><th>行动</th><th>时间</th><th>成本</th><th>理由</th></tr></thead><tbody>';
+
+  // P0
+  html += `<tr>
+    <td class="priority-P0">P0</td>
+    <td>公司内部改风水：换${elPlantInfo[favEl].type}、${elColorNames[favEl].split('、')[0]}色VI${isRemote ? '、视频背景换' + (favEl === 'wood' ? '森林水景' : favEl === 'water' ? '水景' : elColorNames[favEl]) : ''}</td>
+    <td>立即</td>
+    <td><span class="cost-tag cost-free">零成本</span></td>
+    <td style="font-size:12px;">零成本，立即生效${isRemote ? '；远程风水影响团队' : ''}</td>
+  </tr>`;
+
+  // P1
+  const bed = bedroomLayout[favEl];
+  html += `<tr>
+    <td class="priority-P1">P1</td>
+    <td>住址内部优化：门口放${elColorNames[favEl].split('、')[0]}色地垫、床头${bed.bedDir}、${elPlantInfo[favEl].type}、床品换${bed.bedColor}</td>
+    <td>本周</td>
+    <td><span class="cost-tag cost-low">低成本</span></td>
+    <td style="font-size:12px;">不搬家也能改善，化解忌神</td>
+  </tr>`;
+
+  // P2 - find best direction
+  const greatDirs = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'great');
+  const goodDirs = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'good');
+  const bestDir = greatDirs[0] || goodDirs[0] || cd.directions[0];
+  const currentYearJudge = judgeYear(currentYear, fa);
+  const nextYearJudge = judgeYear(currentYear + 1, fa);
+  let p2Time;
+  if (currentYearJudge.level === '凶' || currentYearJudge.level === '混杂') {
+    p2Time = `${currentYear}下半年-${currentYear+1}年初`;
+  } else {
+    p2Time = `${currentYear}下半年`;
+  }
+
+  html += `<tr>
+    <td class="priority-P2">P2</td>
+    <td>租房考察${bestDir.name}方向板块${cd.neighborhoods.length > 0 ? '（' + cd.neighborhoods.filter(n => n.tier <= 2).slice(0,3).map(n => n.area).join('、') + '）' : ''}</td>
+    <td>${p2Time}</td>
+    <td><span class="cost-tag cost-free">考察零成本</span></td>
+    <td style="font-size:12px;">${bestDir.name}=${bestDir.extra}，五行补益最佳${currentYearJudge.level === '凶' ? '；但' + currentYear + '流年偏凶，先考察不急动' : ''}</td>
+  </tr>`;
+
+  // P3
+  let p3Year = currentYear + 2;
+  for (let y = currentYear + 1; y <= currentYear + 5; y++) {
+    const yj = judgeYear(y, fa);
+    if (yj.level === '吉') { p3Year = y; break; }
+  }
+  const p3Judge = judgeYear(p3Year, fa);
+  html += `<tr>
+    <td class="priority-P3">P3</td>
+    <td>买房/长期租房落定${bestDir.name}方向</td>
+    <td>${p3Year}年后${p3Judge.level === '吉' ? '（流年吉，宜动）' : '（视流年择机）'}</td>
+    <td><span class="cost-tag cost-high">大额支出</span></td>
+    <td style="font-size:12px;">${isDebt || isStartup ? '创业期/负债期需待现金流充裕' : '等待喜用神流年落定'}${currentYearJudge.level === '凶' ? '；' + currentYear + '年忌神旺不宜大额支出' : ''}</td>
+  </tr>`;
+
+  // P4
+  let p4Year = currentYear + 3;
+  for (let y = p3Year + 1; y <= currentYear + 7; y++) {
+    const yj = judgeYear(y, fa);
+    if (yj.level === '吉') { p4Year = y; break; }
+  }
+  html += `<tr>
+    <td class="priority-P4">P4</td>
+    <td>公司注册地迁至${bestDir.name}方向（${bestDir.extra}旺地）</td>
+    <td>${p4Year}年后</td>
+    <td><span class="cost-tag cost-high">中高成本</span></td>
+    <td style="font-size:12px;">长期不利地需迁，但短期改造成本高，等${elNames[favEl]}运来再迁</td>
+  </tr>`;
+
+  html += '</tbody></table>';
+  html += '</div>';
+  return html;
+}
+
+function buildSummary(fa, analysis, city, cd, residence, company, finance, manageMode) {
+  const favEl = fa.favorable[0];
+  const greatDirs = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'great');
+  const goodDirs = cd.directions.filter(d => rateDirection(d.el, d.extra, fa).cls === 'good');
+  const bestDirs = greatDirs.length > 0 ? greatDirs : goodDirs;
+  const bestDirStr = bestDirs.length > 0 ? bestDirs.map(d => d.name).join('、') : '吉方位';
+  const bestExtraStr = bestDirs.length > 0 ? bestDirs[0].extra : '用神方';
+
+  let summary = `日主<strong style="color:${elColors[analysis.dayEl]}">${stems[Object.keys(stems).find(k => stems[k] === stems[getDayPillar(parseInt(document.getElementById('year').value), parseInt(document.getElementById('month').value), parseInt(document.getElementById('day').value)).stem])]}</strong>（${elNames[analysis.dayEl]}）身<strong>${analysis.strength}</strong>，喜<strong style="color:${elColors[favEl]}">${elNames[favEl]}</strong>${fa.favorable[1] ? '+' + elNames[fa.favorable[1]] : ''}、忌<strong style="color:${elColors[fa.unfavorable[0]]}">${elNames[fa.unfavorable[0]]}</strong>${fa.unfavorable[1] ? '+' + elNames[fa.unfavorable[1]] : ''}。`;
+
+  if (residence || company) {
+    summary += `当前`;
+    if (residence) summary += `住${residence}`;
+    if (company) summary += `${manageMode === 'remote' ? '、远程管理' : '、公司在'}${company}`;
+    summary += `，`;
+  }
+  summary += `${city}最好的方位是「<strong style="color:${elColors[favEl]};">${bestDirStr}</strong>」（${bestExtraStr}）。`;
+  summary += `短期不搬就做好室内风水（${elColorNames[favEl].split('、')[0]}色 + ${elPlantInfo[favEl].type.replace('植物','').trim() || '绿植'} + ${bedroomLayout[favEl].bedDir}）。`;
+  if (finance === 'debt' || finance === 'startup') {
+    summary += `创业期守现金流，大额支出延后。`;
+  }
+  summary += `公司立刻换内部色调和绿植，零成本改运。`;
+
+  return `<div class="summary-box"><h3>📌 一句话总结</h3><p>${summary}</p></div>`;
+}
 </script>
 </body>
 </html>
