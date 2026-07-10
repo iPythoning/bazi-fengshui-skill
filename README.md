@@ -1,5 +1,9 @@
 # 八字风水分析 Skill (Bazi Fengshui Skill)
 
+<!-- bmc:front -->
+<p align="center"><a href="https://buymeacoffee.com/dayongfan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=&amp;slug=dayongfan&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff" alt="Buy me a coffee"></a></p>
+<!-- /bmc:front -->
+
 > WorkBuddy Skill — 输入出生年月日，自动推算八字喜忌五行，生成个性化方位吉凶判断、板块推荐、风水优化与搬迁规划。
 
 ## 概述
@@ -42,6 +46,10 @@ bazi-fengshui-general/
 - **Level 3**：references 文件 — 按需加载，不占用初始上下文
 
 ## 使用方式
+
+<!-- bmc:middle -->
+<p align="center"><a href="https://buymeacoffee.com/dayongfan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=&amp;slug=dayongfan&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff" alt="Buy me a coffee"></a></p>
+<!-- /bmc:middle -->
 
 ### 在 WorkBuddy 中使用
 
@@ -100,6 +108,6 @@ Skill 会自动触发，按照七步分析流程生成完整报告。
 
 MIT
 
-## Support
-
-[![Buy me a coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=dayongfan&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/dayongfan)
+<!-- bmc:end -->
+<p align="center"><a href="https://buymeacoffee.com/dayongfan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&amp;emoji=&amp;slug=dayongfan&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff" alt="Buy me a coffee"></a></p>
+<!-- /bmc:end -->
